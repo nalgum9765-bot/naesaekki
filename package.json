@@ -1,0 +1,19 @@
+{
+  "name": "naesaekki",
+  "version": "1.0.0",
+  "private": true,
+  "description": "내새끼 — 반려동물 나이·추억 기록 앱",
+  "scripts": {
+    "sync": "npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "8.6.2",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/share": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2"
+  }
+}

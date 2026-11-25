@@ -1,0 +1,8 @@
+{
+  "appId": "com.dogom.naesaekki",
+  "appName": "내새끼",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#fff6fb"
+  }
+}
