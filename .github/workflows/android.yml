@@ -62,4 +62,17 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x gradlew
-          if [ "$SIGNED" =
+          if [ "$SIGNED" = "true" ]; then
+            ./gradlew bundleRelease assembleRelease --no-daemon
+          else
+            ./gradlew assembleDebug --no-daemon
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: naesaekki-${{ env.VERSION_NAME }}-${{ env.VERSION_CODE }}
+          if-no-files-found: error
+          path: |
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/debug/*.apk
