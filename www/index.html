@@ -145,6 +145,7 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .set-row{display:flex;align-items:center;gap:8px;width:100%;height:64px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
 .set-row span:first-child{flex:1}
 .set-row .cap{color:var(--muted)}
+.set-foot{flex:none;align-self:center;font-size:11px;line-height:16px;color:var(--muted);text-decoration:underline;text-underline-offset:2px;padding:8px 12px;margin-bottom:4px}
 
 /* ---------- 홈 꾸미기 (C01~C13) ---------- */
 #v-custom{color:var(--t-ink)}
@@ -217,7 +218,9 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .align{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 72px;gap:8px;align-items:center}
 .align .btn{height:36px;box-shadow:none;border:1px solid transparent}
 .align .btn[aria-pressed=true]{border-color:var(--t-ink)}
-.colorbtn{display:flex;align-items:center;justify-content:center;gap:8px;height:36px;font-size:12px}
+.colorbtn{display:flex;align-items:center;justify-content:center;gap:8px;height:36px;font-size:12px;border:1px solid var(--line);background:#fffef9}
+.colorbtn .swatch{width:26px;height:22px}
+.sacts .swatch{width:24px!important;height:24px!important}
 
 /* ---------- 팝업 ---------- */
 .dim{position:fixed;inset:0;background:rgba(36,38,32,.24);display:none;align-items:center;justify-content:center;padding:24px;z-index:10}
@@ -330,16 +333,15 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   <section class="view" id="v-settings" aria-label="설정">
     <div class="header"><h1 class="title">설정</h1></div>
     <div class="set-list">
-      <button class="set-row" data-set="custom"><span>홈 꾸미기</span><span class="cap">색상·스티커·멘트</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="custom"><span style="font-weight:700">홈 꾸미기</span><span class="cap">색상·스티커·멘트</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="pet"><span>내 새끼 정보</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="photo"><span>내 새끼 사진 바꾸기</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="wall"><span>배경화면으로 저장</span><span class="cap">홈·잠금화면</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="backup"><span>백업</span><span data-icon="chevron"></span></button>
       <button class="set-row hidden" data-set="install" id="set-install"><span>홈 화면에 앱으로 추가</span><span class="cap">더 안전하게 보관</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="request"><span>개발자에게 요청하기</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="privacy"><span>개인정보처리방침</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="demo" id="set-demo"><span>샘플 데이터로 둘러보기</span><span class="cap">내 데이터는 그대로</span><span data-icon="chevron"></span></button>
     </div>
+    <button class="set-foot" data-set="privacy" id="set-privacy">개인정보처리방침</button>
   </section>
 
   <!-- C01~C13 · 홈 꾸미기 -->
@@ -385,8 +387,8 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
             <button class="btn" data-f="bold" style="font-weight:700">굵게</button><button class="btn" data-f="italic" style="font-style:italic">기울임</button><button class="btn" data-f="underline" style="text-decoration:underline">밑줄</button><button class="btn" data-f="strike" style="text-decoration:line-through">취소선</button>
           </div>
           <div class="row2">
-            <div class="field"><label for="t-lh" class="cap" style="color:inherit">행간 (%)</label><input class="input soft" type="number" id="t-lh" min="80" max="300" step="10"></div>
-            <div class="field"><label for="t-ls" class="cap" style="color:inherit">자간 (px)</label><input class="input soft" type="number" id="t-ls" min="-5" max="20" step="0.5"></div>
+            <div class="field"><span class="cap" style="color:inherit">행간 (%)</span><div class="stepper"><button type="button" id="t-lh-m" aria-label="행간 줄이기">−</button><input type="number" id="t-lh" min="80" max="300" step="5" aria-label="행간"><button type="button" id="t-lh-p" aria-label="행간 늘리기">+</button></div></div>
+            <div class="field"><span class="cap" style="color:inherit">자간 (px)</span><div class="stepper"><button type="button" id="t-ls-m" aria-label="자간 줄이기">−</button><input type="number" id="t-ls" min="-5" max="20" step="0.5" aria-label="자간"><button type="button" id="t-ls-p" aria-label="자간 늘리기">+</button></div></div>
           </div>
           <div class="align" id="t-align">
             <button class="btn" data-a="left" aria-label="왼쪽 정렬" data-icon="alignL"></button><button class="btn" data-a="center" aria-label="가운데 정렬" data-icon="alignC"></button><button class="btn" data-a="right" aria-label="오른쪽 정렬" data-icon="alignR"></button>
@@ -419,6 +421,15 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <button class="tab" data-tab="album"><span data-icon="album"></span>사진첩<i></i></button>
     <button class="tab" data-tab="settings"><span data-icon="settings"></span>설정<i></i></button>
   </nav>
+</div>
+
+<!-- 홈 꾸미기 그만두기 확인 -->
+<div class="dim" id="d-quit" role="dialog" aria-modal="true" aria-labelledby="dq-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dq-t">홈 꾸미기를 그만할까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <p class="body12">지금까지 꾸민 내용은 저장되지 않아요.</p>
+    <div class="row2"><button class="btn" data-close>계속 꾸미기</button><button class="btn danger" id="dq-go">그만하기</button></div>
+  </div>
 </div>
 
 <!-- H03 · 사람 나이 안내 -->
@@ -477,7 +488,6 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="field" id="pf-size-f"><label for="pf-size">강아지 크기</label><select class="input" id="pf-size"><option value="s">소형견</option><option value="m">중형견</option><option value="l">대형견</option></select></div>
     <button type="button" class="btn" id="pf-photo">사진 고르기</button>
     <button type="submit" class="btn">저장</button>
-    <button type="button" class="btn ghost" id="pf-demo">샘플 데이터로 먼저 둘러보기</button>
   </form>
 </div>
 
@@ -611,7 +621,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="dhead"><h2 id="dw-t">내 새끼 배경화면</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <div class="row2">
       <div class="field"><label for="w-kind">화면</label><select class="input" id="w-kind"><option value="lock">잠금화면용</option><option value="home">홈화면용</option></select></div>
-      <div class="field"><label for="w-ratio">비율</label><select class="input" id="w-ratio"><option value="2.2222">20:9</option><option value="2.1667">19.5:9</option><option value="1.7778">16:9</option></select></div>
+      <div class="field"><label for="w-ratio">비율</label><select class="input" id="w-ratio"><option value="auto">내 폰 화면</option><option value="2.2222">20:9</option><option value="2.1667">19.5:9</option><option value="1.7778">16:9</option></select></div>
     </div>
     <div class="row2">
       <label class="check"><input type="checkbox" id="w-age" checked>나이 표시</label>
@@ -867,7 +877,7 @@ function openPet(first){
   $('pf-name').value=pdraft.name||'';$('pf-birth').value=pdraft.birth||'';$('pf-birth').max=ymd(today());
   $('pf-kind').value=pdraft.kind;$('pf-size').value=pdraft.size;$('pf-size-f').classList.toggle('hidden',pdraft.kind!=='dog');
   $('pf-photo').classList.toggle('hidden',!first);$('pf-photo').textContent=pdraft.photo?'사진 바꾸기 ✓':'사진 고르기';
-  $('pet-x').classList.toggle('hidden',first);$('pf-demo').classList.toggle('hidden',!first);$('dpet-t').textContent=first?'내 새끼를 소개해 주세요':'내 새끼 정보';
+  $('pet-x').classList.toggle('hidden',first);$('dpet-t').textContent=first?'내 새끼를 소개해 주세요':'내 새끼 정보';
   openD('d-pet');
 }
 $('pf-kind').onchange=()=>$('pf-size-f').classList.toggle('hidden',$('pf-kind').value!=='dog');
@@ -991,7 +1001,7 @@ $('file-pet').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(
 /* ---------- C01~C13 홈 꾸미기 ---------- */
 const draft={theme:null,els:[],sel:-1,hist:[],redo:[]};
 const stageEl=$('c-stage'),drawer=$('c-drawer');let ctab='color',textDraft=null;
-function openCustom(){draft.ment=pet.ment||'';draft.theme=clone(theme);draft.els=clone(elements);draft.sel=-1;draft.hist=[];draft.redo=[];go('custom');setCtab('color');renderCustom()}
+function openCustom(){draft.ment=pet.ment||'';draft.theme=clone(theme);draft.els=clone(elements);draft.sel=-1;draft.hist=[];draft.redo=[];draft.start=snapState();go('custom');setCtab('color');renderCustom()}
 const snapState=()=>JSON.stringify({t:draft.theme,e:draft.els,m:draft.ment});
 function pushHist(){draft.redo=[];draft.hist.push(snapState());if(draft.hist.length>50)draft.hist.shift()}
 function renderCustom(){
@@ -1036,7 +1046,7 @@ $('dsv-list').onclick=async e=>{const a=e.target.closest('[data-sp]'),d=e.target
   if(d){savedPals.splice(+d.dataset.spdel,1);await store.set('savedPals',savedPals);renderSaved()}};
 $('c-totext').onclick=()=>{draft.sel=-1;setCtab('text');renderCustom()};
 FONTS.forEach(([f,l])=>$('t-font').insertAdjacentHTML('beforeend',`<option value="${f}" style="font-family:'${f}'">${l}</option>`));
-function newText(){return {type:'text',text:'',font:'Noto Sans KR',size:20,bold:false,italic:false,underline:false,strike:false,lh:130,ls:0,align:'center',color:draft.theme.ink,x:0,y:-170,rot:0,scale:1}}
+function newText(){return {type:'text',text:'',font:'Noto Sans KR',size:20,bold:false,italic:false,underline:false,strike:false,lh:130,ls:0,align:'center',color:draft.theme.ink,x:0,y:-Math.max(40,Math.min(150,stageEl.clientHeight/2-70)),rot:0,scale:1}}
 function curText(){const e=selEl();if(e&&e.type==='text')return e;if(!textDraft)textDraft=newText();return textDraft}
 function fillText(){const t=curText();if(document.activeElement!==$('t-text'))$('t-text').value=t.text;$('t-font').value=t.font;$('t-size').value=t.size;$('t-lh').value=t.lh;$('t-ls').value=t.ls;
   $('t-fmt').querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',!!t[b.dataset.f]));
@@ -1044,13 +1054,19 @@ function fillText(){const t=curText();if(document.activeElement!==$('t-text'))$(
   $('t-swatch').style.background=t.color;$('t-del').textContent=selEl()&&selEl().type==='text'?'삭제':'비우기'}
 let textEdited=false;
 function editText(fn){const live=selEl()&&selEl().type==='text';if(live&&!textEdited){pushHist();textEdited=true}fn(curText());if(live)renderCustom();else fillText()}
-$('t-text').oninput=e=>editText(t=>t.text=e.target.value);
+$('t-text').oninput=e=>{const v=e.target.value;
+  // 새 문구는 첫 글자부터 화면에 바로 올려서 실시간으로 보여줘요
+  if(!(selEl()&&selEl().type==='text')&&v.trim()){const t=curText();t.text=v;pushHist();textEdited=true;draft.els.push(t);draft.sel=draft.els.length-1;textDraft=null;renderCustom();return}
+  editText(t=>t.text=v)};
 $('t-text').onfocus=()=>{textEdited=false};
 $('t-font').onchange=e=>{textEdited=false;editText(t=>t.font=e.target.value)};
 const setSize=v=>editText(t=>t.size=Math.max(10,Math.min(64,Math.round(v)||20)));
 $('t-size').onchange=e=>{textEdited=false;setSize(+e.target.value)};$('t-minus').onclick=()=>{textEdited=false;setSize(curText().size-2)};$('t-plus').onclick=()=>{textEdited=false;setSize(curText().size+2)};
-$('t-lh').onchange=e=>{textEdited=false;editText(t=>t.lh=Math.max(80,Math.min(300,+e.target.value||130)))};
-$('t-ls').onchange=e=>{textEdited=false;editText(t=>t.ls=Math.max(-5,Math.min(20,+e.target.value||0)))};
+const setLh=v=>{textEdited=false;editText(t=>t.lh=Math.max(80,Math.min(300,Math.round(v)||130)))};
+const setLs=v=>{textEdited=false;editText(t=>t.ls=Math.max(-5,Math.min(20,Math.round((Number.isFinite(v)?v:0)*2)/2)))};
+$('t-lh').onchange=e=>setLh(+e.target.value);$('t-ls').onchange=e=>setLs(+e.target.value);
+$('t-lh-m').onclick=()=>setLh(curText().lh-5);$('t-lh-p').onclick=()=>setLh(curText().lh+5);
+$('t-ls-m').onclick=()=>setLs((curText().ls||0)-.5);$('t-ls-p').onclick=()=>setLs((curText().ls||0)+.5);
 $('t-fmt').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;textEdited=false;editText(t=>t[b.dataset.f]=!t[b.dataset.f])};
 $('t-align').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;textEdited=false;editText(t=>t.align=b.dataset.a)};
 $('t-color').onclick=()=>openColor(curText().color,c=>{textEdited=false;editText(t=>t.color=c)});
@@ -1061,9 +1077,9 @@ $('t-apply').onclick=()=>{const t=curText();if(!t.text.trim()){toast('문구를 
   drawer.classList.add('collapsed');renderCustom();toast('끌어서 원하는 곳에 놓아 주세요')};
 $('t-del').onclick=()=>{const e=selEl();if(e&&e.type==='text'){pushHist();draft.els.splice(draft.sel,1);draft.sel=-1;renderCustom()}else{textDraft=newText();fillText()}};
 $('c-stk').onclick=e=>{const b=e.target.closest('[data-stk]');if(!b)return;pushHist();const k=b.dataset.stk;
-  const n=draft.els.length;draft.els.push({type:'sticker',key:k,color:STK[k].c||draft.theme.point,x:((n*37)%140)-70,y:-60+((n*53)%80),rot:0,scale:1});draft.sel=draft.els.length-1;renderCustom()};
+  const n=draft.els.length;draft.els.push({type:'sticker',key:k,color:STK[k].c||draft.theme.point,x:((n*37)%140)-70,y:-60+((n*53)%80),rot:0,scale:.5});draft.sel=draft.els.length-1;renderCustom()};
 $('c-mine').onclick=e=>{if(e.target.closest('#c-addmine')){openMySticker();return}const b=e.target.closest('[data-my]');if(!b)return;pushHist();
-  draft.els.push({type:'image',src:myStickers[+b.dataset.my].src,x:70,y:-40,rot:0,scale:1});draft.sel=draft.els.length-1;renderCustom()};
+  draft.els.push({type:'image',src:myStickers[+b.dataset.my].src,x:70,y:-40,rot:0,scale:.5});draft.sel=draft.els.length-1;renderCustom()};
 let myLp;$('c-mine').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-my]');if(!b)return;myLp=setTimeout(async()=>{myLp='done';const i=+b.dataset.my;
   if(b.dataset.armed){myStickers.splice(i,1);await store.set('myStickers',myStickers);renderPanes();toast('내 스티커를 지웠어요')}else{b.dataset.armed=1;toast('한 번 더 길게 누르면 이 스티커를 지워요')}},600)});
 ['pointerup','pointerleave','pointercancel'].forEach(t=>$('c-mine').addEventListener(t,()=>{if(myLp!=='done')clearTimeout(myLp)}));
@@ -1103,7 +1119,9 @@ stageEl.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId)||!gest)retu
 function endPtr(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);
   if(gest){if(gest.moved)draft.redo=[];else draft.hist.pop()}gest=null;if(ptrs.size)startGesture();else renderPanes()}
 ['pointerup','pointercancel'].forEach(t=>stageEl.addEventListener(t,endPtr));
-$('c-cancel').onclick=()=>{textDraft=null;go('settings');toast('꾸민 내용을 저장하지 않았어요')};
+function quitCustom(){textDraft=null;closeD('d-quit');go('settings')}
+$('c-cancel').onclick=()=>{if(snapState()===draft.start&&!(textDraft&&textDraft.text)){quitCustom();return}openD('d-quit')};
+$('dq-go').onclick=()=>{quitCustom();toast('꾸민 내용을 저장하지 않았어요')};
 $('c-done').onclick=async()=>{theme=draft.theme;elements=draft.els;if(pet.ment!==draft.ment){pet.ment=draft.ment;await store.set('pet',pet)}textDraft=null;await store.set('theme',theme);await store.set('elements',elements);go('home');toast('홈을 꾸몄어요')};
 
 /* C06 내 스티커 만들기 */
@@ -1140,6 +1158,7 @@ $('dc-hex').onchange=e=>{let v=e.target.value.trim();if(v[0]!=='#')v='#'+v;if(/^
 $('dc-apply').onclick=()=>{closeD('d-color');colorCb&&colorCb(hsv2hex(hsv))};
 
 /* ---------- S01 설정 ---------- */
+$('set-privacy').onclick=()=>openPrivacy();
 document.querySelector('.set-list').onclick=e=>{const b=e.target.closest('[data-set]');if(!b)return;const k=b.dataset.set;
   if(k==='pet')openPet(false);else if(k==='photo')changePhoto();else if(k==='custom')openCustom();
   else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}};
@@ -1183,12 +1202,16 @@ $('req-form').onsubmit=async e=>{e.preventDefault();const txt=$('rq-text').value
   try{await navigator.clipboard.writeText(body);closeD('d-request');toast('요청 내용을 복사했어요. 개발자에게 붙여넣어 보내 주세요')}catch(_){toast('아직 받을 주소가 설정되지 않았어요')}};
 
 /* S05 배경화면 */
-async function renderWallpaper(scale){
-  const ratio=+$('w-ratio').value,H0=Math.round(390*ratio),W=Math.round(390*scale),H=Math.round(H0*scale);
-  const box=document.createElement('div');box.style.cssText=`position:fixed;left:-9999px;top:0;width:390px;height:${H0}px;display:flex;align-items:center;justify-content:center`;
-  applyTheme(box,theme);box.innerHTML=`<div class="hero-wrap" style="${$('w-kind').value==='lock'?'margin-top:35%':''}">${heroHTML(elements,{noAge:!$('w-age').checked,noMent:!$('w-ment').checked})}</div>`;
+// 홈 화면과 같은 폭(W0)으로 그려서 요소 위치·크기 비율이 폰에서 보던 그대로 저장돼요
+const wallW=()=>Math.round(Math.min(430,$('app').clientWidth||innerWidth||390));
+function wallRatio(){const v=$('w-ratio').value;if(v!=='auto')return +v;const w=screen.width||innerWidth,h=screen.height||innerHeight;const r=Math.max(w,h)/Math.min(w,h);return r>1.3&&r<3?r:2.1667}
+async function renderWallpaper(outW){
+  const W0=wallW(),ratio=wallRatio(),H0=Math.round(W0*ratio),scale=outW/W0,W=Math.round(outW),H=Math.round(H0*scale);
+  const box=document.createElement('div');box.style.cssText=`position:fixed;left:-9999px;top:0;width:${W0}px;height:${H0}px;display:flex;align-items:center;justify-content:center`;
+  // 잠금화면은 위쪽 시계를 피해서 살짝만 아래로 (가운데보다 화면 높이의 약 4.5% 아래)
+  applyTheme(box,theme);box.innerHTML=`<div class="hero-wrap" style="${$('w-kind').value==='lock'?`margin-top:${Math.round(H0*.09)}px`:''}">${heroHTML(elements,{noAge:!$('w-age').checked,noMent:!$('w-ment').checked})}</div>`;
   document.body.appendChild(box);try{await document.fonts.ready}catch(_){}
-  const c=mkCanvas(W,H),x=c.getContext('2d'),B=box.getBoundingClientRect();x.scale(scale,scale);x.fillStyle=theme.bg;x.fillRect(0,0,390,H0);
+  const c=mkCanvas(W,H),x=c.getContext('2d'),B=box.getBoundingClientRect();x.scale(scale,scale);x.fillStyle=theme.bg;x.fillRect(0,0,W0,H0);
   const R=n=>{const r=n.getBoundingClientRect();return {x:r.left-B.left,y:r.top-B.top,w:r.width,h:r.height}};
   const txt=n=>{const r=R(n),cs=getComputedStyle(n);x.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;x.fillStyle=cs.color;x.textAlign='center';x.textBaseline='middle';x.fillText(n.textContent,r.x+r.w/2,r.y+r.h/2)};
   // 굵은 숫자가 섞인 줄: 조각별로 글꼴을 바꿔 가며 가운데 정렬로 그림
@@ -1211,11 +1234,11 @@ async function renderWallpaper(scale){
         if(e.underline)x.fillRect(lx,y+e.size*.45,w,Math.max(1,e.size/14));if(e.strike)x.fillRect(lx,y,w,Math.max(1,e.size/14))})}
     x.restore()}
   box.remove();return c}
-async function updateWallPreview(){const c=await renderWallpaper(1);$('w-img').src=c.toDataURL('image/png')}
+async function updateWallPreview(){const c=await renderWallpaper(wallW());$('w-img').src=c.toDataURL('image/png')}
 function openWall(){$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
 ['w-kind','w-ratio','w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
 $('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textContent='저장하는 중…';
-  try{const c=await renderWallpaper(1080/390),url=c.toDataURL('image/png');$('w-img').src=url;
+  try{const c=await renderWallpaper(1080),url=c.toDataURL('image/png');$('w-img').src=url;
     const name=`naesaekki-${$('w-kind').value==='lock'?'lock':'home'}-${Date.now()}.png`;
     // 앱(Android 10+)에서는 공유 창 없이 사진 앱의 '내새끼' 앨범에 바로 저장
     const NS=plug('Naesaekki');
@@ -1327,7 +1350,6 @@ $('dr2-go').onclick=()=>{closeD('d-remind');$('db-note').classList.add('hidden')
 /* ---------- 샘플 데이터 모드 (#demo) — 메모리에서만 동작, 내 데이터는 건드리지 않음 ---------- */
 const DEMO=location.hash==='#demo';
 function enterDemo(){location.hash='demo';location.reload()}
-$('pf-demo').onclick=enterDemo;
 $('demo-exit').onclick=()=>{history.replaceState(null,'',location.pathname+location.search);location.reload()};
 async function loadDemo(){
   const d=await (await fetch(new URL('demo.json',location.href))).json();
@@ -1337,7 +1359,7 @@ async function loadDemo(){
 
 /* ---------- 시작 ---------- */
 (async()=>{
-  if(DEMO){$('demo-bar').classList.remove('hidden');$('set-demo').classList.add('hidden');
+  if(DEMO){$('demo-bar').classList.remove('hidden');
     try{await loadDemo();go('home');toast('샘플 데이터를 불러왔어요')}catch(e){console.warn(e);toast('샘플 데이터를 불러오지 못했어요')}return}
   await openDB();
   pet=await store.get('pet')||null;mentIdx=await store.get('mentIdx')||0;sort=await store.get('sort')||'ageAsc';
