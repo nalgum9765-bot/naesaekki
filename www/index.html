@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fff6fb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="내새끼">
@@ -52,17 +52,34 @@ button{background:none;border:0;cursor:pointer;color:inherit}
 .hero .muted{font-size:11px;line-height:16px;color:color-mix(in srgb,var(--t-ink) 68%,var(--t-bg))}
 .hero-main{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 .ment{background:var(--t-bubble);border:2px solid var(--t-ink);box-shadow:3px 3px 0 0 var(--t-ink);padding:6px 13px;font-size:11px;line-height:16px;margin-bottom:3px;max-width:100%;color:var(--t-ink)}
-.photo-age{display:flex;flex-direction:column;align-items:center;gap:2px}
+.photo-age{display:flex;flex-direction:column;align-items:center;gap:0}
 .pet-photo{width:100px;height:100px;display:flex;align-items:center;justify-content:center}
 .pet-photo img{width:100%;height:100%;object-fit:contain}
-.age{font-size:26px;line-height:36px;font-weight:900;white-space:nowrap}
-.sub{display:flex;flex-direction:column;align-items:center}
+.age{font-size:26px;line-height:34px;font-weight:900;white-space:nowrap;margin-top:6px}
+.sub{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;font-size:11px;line-height:16px;white-space:nowrap}
 .sub button{font-size:11px;line-height:16px;color:inherit}
+.sub b{font-weight:700;color:var(--t-ink)}
+.sub .dot{opacity:.6}
 .layer{position:absolute;left:50%;top:50%;width:0;height:0}
 .el{position:absolute;left:0;top:0;transform-origin:center;white-space:pre;line-height:1.3;touch-action:none}
 .el svg,.el img{display:block;pointer-events:none}
 .el img{width:80px;height:auto}
 .home .el{pointer-events:none}
+/* 홈에서 내 새끼를 누르면 살아 움직여요 */
+.pet-photo{position:relative}
+.pet-photo>:not(.pop){transform-origin:50% 100%}
+.pet-photo.a-hop>:not(.pop){animation:p-hop .6s cubic-bezier(.3,0,.3,1)}
+.pet-photo.a-wiggle>:not(.pop){animation:p-wiggle .6s ease-in-out}
+.pet-photo.a-squish>:not(.pop){animation:p-squish .55s ease-out}
+.pet-photo.a-spin>:not(.pop){animation:p-spin .7s ease-in-out}
+.pet-photo.a-shake>:not(.pop){animation:p-shake .5s linear}
+@keyframes p-hop{0%{transform:none}20%{transform:scale(1.08,.9)}45%{transform:translateY(-34px) scale(.95,1.06)}70%{transform:translateY(0) scale(1.1,.88)}85%{transform:scale(.97,1.03)}100%{transform:none}}
+@keyframes p-wiggle{0%,100%{transform:none}20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-7deg)}80%{transform:rotate(4deg)}}
+@keyframes p-squish{0%,100%{transform:none}30%{transform:scale(1.25,.75)}55%{transform:scale(.85,1.15)}75%{transform:scale(1.06,.95)}}
+@keyframes p-spin{0%{transform:none}40%{transform:translateY(-24px) rotate(180deg)}80%{transform:translateY(0) rotate(360deg)}100%{transform:rotate(360deg)}}
+@keyframes p-shake{0%,100%{transform:none}10%,50%,90%{transform:translateX(-6px)}30%,70%{transform:translateX(6px)}}
+.pop{position:absolute;left:50%;top:20%;pointer-events:none;animation:pop 1s ease-out forwards;z-index:3}
+@keyframes pop{0%{transform:translate(-50%,0) scale(.4);opacity:0}20%{opacity:1;transform:translate(calc(-50% + var(--dx)),-20px) scale(1)}100%{transform:translate(calc(-50% + var(--dx)),-90px) scale(.9);opacity:0}}
 
 /* ---------- 홈 ---------- */
 #v-home{color:var(--t-ink)}
@@ -232,6 +249,15 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .saved-row{display:flex;align-items:center;gap:8px}
 .saved-row .pal{flex:1}
 .saved-row .iconbtn{min-width:36px;height:36px}
+/* 팝업 안은 휴대폰 시스템 글꼴 + 한 단계 작은 글자 */
+.dialog,.dialog button,.dialog input,.dialog select,.dialog textarea{font-family:system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+.dialog{gap:14px}
+.dhead h2{font-size:16px;line-height:24px}
+.dialog .input{height:40px;font-size:14px;padding:6px 12px}
+.dialog textarea.input{height:80px}
+.dialog .btn{height:42px;font-size:13px}
+.dialog .field>label,.dialog .field .lab{font-size:12px;font-weight:500}
+.dialog .check{min-height:36px}
 
 /* P03·P04 · 사진 수정 */
 #d-edit{z-index:12}
@@ -248,6 +274,14 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .stagebar{display:flex;justify-content:space-between;align-items:center;margin:-8px 0}
 .stagebar button{font-size:11px;line-height:16px;color:var(--muted);min-height:32px}
 
+.detail-photo img{cursor:zoom-in}
+.memo-cap{font-size:12px;line-height:18px;white-space:pre-wrap;text-align:center}
+.cell .memo{position:absolute;left:6px;top:6px;width:20px;height:20px;background:var(--white);border:1px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.viewer{position:fixed;inset:0;background:#000;z-index:20;display:none;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none}
+.viewer.on{display:block}
+.viewer img{position:absolute;left:50%;top:50%;max-width:100%;max-height:100%;transform-origin:center;will-change:transform}
+.viewer .vclose{position:absolute;top:calc(8px + env(safe-area-inset-top));right:8px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:2}
+.viewer .vmemo{position:absolute;left:0;right:0;bottom:0;padding:16px 24px calc(20px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:13px;line-height:20px;white-space:pre-wrap;text-align:center;pointer-events:none}
 .toast{position:fixed;left:50%;bottom:calc(104px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(310px,calc(100% - 48px));background:var(--ink);color:var(--white);font-size:13px;line-height:20px;text-align:center;padding:12px 16px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
 .toast.on{opacity:1}
 body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
@@ -425,7 +459,9 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="dhead"><h2 id="dp-t">사진 속 내 새끼</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <div class="detail-photo"><img id="dp-img" alt=""></div>
     <p class="detail-age" id="dp-age"></p>
+    <p class="cap" style="text-align:center;margin-top:-10px">사진을 누르면 크게 볼 수 있어요</p>
     <div class="field center"><label for="dp-date" style="font-size:13px;font-weight:700">촬영 날짜</label><input class="input" type="date" id="dp-date"></div>
+    <div class="field"><label for="dp-memo">메모</label><textarea class="input" id="dp-memo" maxlength="300" placeholder="이날 있었던 일을 적어 두세요"></textarea></div>
     <button class="btn" id="dp-save">수정 완료</button>
     <button class="btn ghost danger" id="dp-del">사진 삭제</button>
   </div>
@@ -589,6 +625,22 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
 
 <input type="file" id="file-pet" accept="image/*" hidden>
 <input type="file" id="file-album" accept="image/*" multiple hidden>
+<input type="file" id="file-folder" webkitdirectory multiple hidden>
+<!-- 사진 추가 방법 -->
+<div class="dim" id="d-addpick" role="dialog" aria-modal="true" aria-labelledby="dap-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dap-t">사진 추가</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <button class="btn" id="dap-photos">사진 골라서 올리기</button>
+    <button class="btn" id="dap-folder">폴더째 올리기</button>
+    <p class="cap">폴더째 올리면 안에 있는 사진을 모두 담고, 촬영 날짜로 나이별로 정리해요.</p>
+  </div>
+</div>
+<!-- 사진 크게 보기 -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+  <img id="v-img" alt="" draggable="false">
+  <button class="vclose" id="v-close" aria-label="닫기"></button>
+  <p class="vmemo hidden" id="v-memo"></p>
+</div>
 <input type="file" id="file-backup" accept="application/json,.json" hidden>
 <div class="toast" id="toast" role="status"></div>
 
@@ -621,7 +673,8 @@ redo:['M16 7H18V9H16ZM14 6H16V10H14ZM12 4H14V12H12ZM5 7H12V9H5ZM3 8H5V10H3ZM2 10
 chevDown:['M4 6H6V8H8V10H12V8H14V6H16V10H14V12H12V14H8V12H6V10H4V6Z'],
 alignL:['M3 4H17V6H3V4ZM3 8H12V10H3V8ZM3 12H17V14H3V12ZM3 16H11V18H3V16Z'],
 alignC:['M3 4H17V6H3V4ZM6 8H14V10H6V8ZM3 12H17V14H3V12ZM6 16H14V18H6V16Z'],
-alignR:['M3 4H17V6H3V4ZM8 8H17V10H8V8ZM3 12H17V14H3V12ZM9 16H17V18H9V16Z']
+alignR:['M3 4H17V6H3V4ZM8 8H17V10H8V8ZM3 12H17V14H3V12ZM9 16H17V18H9V16Z'],
+memo:['M3 2H17V18H3V2ZM5 4V16H15V4H5ZM7 6H13V8H7V6ZM7 10H13V12H7V10Z']
 };
 const STK={
 heart:{d:'M4 3H7V4H9V6H11V4H13V3H16V4H18V6H19V11H17V13H15V15H13V17H11V19H9V17H7V15H5V13H3V11H1V6H2V4H4V3Z',c:'#FF6638'},
@@ -729,9 +782,9 @@ function heroHTML(els,opt={}){
     <p class="pet-name">${esc(pet.name)}</p><p class="muted">${dot(pet.birth)}</p>
     <div class="hero-main">
       ${opt.noMent?'':`<button class="ment" data-act="ment">${esc(opt.ment!==undefined?(opt.ment||MENTS[mentIdx%MENTS.length]):ment())}</button>`}
-      <div class="photo-age"><button class="pet-photo" data-act="photo" aria-label="사진 바꾸기">${ph}</button>
+      <div class="photo-age"><button class="pet-photo" data-act="photo" aria-label="${esc(pet.name)} 쓰다듬기">${ph}</button>
         ${opt.noAge?'':`<p class="age">${ageText(m)}</p>
-        <div class="sub muted"><button data-act="human">태어난 지 ${days.toLocaleString('ko-KR')}일</button><button data-act="human" aria-haspopup="dialog">사람 나이 약 ${Math.floor(humanAge(m))}살</button></div>`}
+        <div class="sub muted"><button data-act="human">태어난 지 <b>${days.toLocaleString('ko-KR')}</b>일</button><span class="dot" aria-hidden="true">·</span><button data-act="human" aria-haspopup="dialog">사람 나이 약 <b>${Math.floor(humanAge(m))}</b>살</button></div>`}
       </div></div></div>
     <div class="layer">${els.map(elHTML).join('')}</div>`;
 }
@@ -740,8 +793,15 @@ function heroHTML(els,opt={}){
 function renderHome(){applyTheme($('v-home'),theme);$('h-wrap').innerHTML=heroHTML(elements)}
 $('h-wrap').addEventListener('click',async e=>{const a=e.target.closest('[data-act]');if(!a)return;
   if(a.dataset.act==='ment'){if(pet.ment){openMent();return}mentIdx++;await store.set('mentIdx',mentIdx);renderHome()}
-  else if(a.dataset.act==='photo')changePhoto();
+  else if(a.dataset.act==='photo')wiggle(a);
   else if(a.dataset.act==='human')openD('d-human')});
+const MOVES=['a-hop','a-wiggle','a-squish','a-spin','a-shake'];let lastMove=-1;
+function wiggle(a){MOVES.forEach(c=>a.classList.remove(c));void a.offsetWidth;
+  let k;do{k=Math.floor(Math.random()*MOVES.length)}while(k===lastMove);lastMove=k;a.classList.add(MOVES[k]);
+  a.addEventListener('animationend',function f(ev){if(ev.target.classList.contains('pop'))return;a.classList.remove(MOVES[k]);a.removeEventListener('animationend',f)});
+  for(let i=0;i<3;i++){const h=document.createElement('span');h.className='pop';h.style.setProperty('--dx',(i-1)*26+'px');h.style.animationDelay=i*90+'ms';
+    h.innerHTML=stkSVG('heart',['#FF6638','#f08d9d','#c8738b'][i],16);a.appendChild(h);setTimeout(()=>h.remove(),1300)}
+  if(navigator.vibrate)try{navigator.vibrate(15)}catch(_){}}
 let lpT;$('h-wrap').addEventListener('pointerdown',e=>{if(e.target.closest('[data-act=ment]'))lpT=setTimeout(()=>{lpT='done';openMent()},550)});
 ['pointerup','pointerleave','pointercancel'].forEach(t=>$('h-wrap').addEventListener(t,()=>{if(lpT!=='done')clearTimeout(lpT)}));
 $('h-wrap').addEventListener('click',e=>{if(lpT==='done'){e.stopImmediatePropagation();lpT=null}},true);
@@ -767,7 +827,7 @@ function renderAlbum(){
   list.sort(sort==='recent'?(a,b)=>b.added-a.added:sort==='ageDesc'?(a,b)=>b.date.localeCompare(a.date)||b.added-a.added:(a,b)=>a.date.localeCompare(b.date)||a.added-b.added);
   $('a-count').textContent=`${list.length}장의 추억`;
   $('a-sort').innerHTML=esc(SORTS.find(s=>s[0]===sort)[1])+icon('chevDown',12,'currentColor');
-  $('a-grid').innerHTML=list.map(p=>`<button class="cell${selected.has(p.id)?' sel':''}" data-id="${esc(p.id)}"><span class="ph"><img src="${urlFor(p,'thumb')}" alt="" loading="lazy" decoding="async"></span><span class="tick"></span><b>${ageText(photoMonths(p),' 때')}</b><span class="cap">${dot(p.date)}</span></button>`).join('');
+  $('a-grid').innerHTML=list.map(p=>`<button class="cell${selected.has(p.id)?' sel':''}" data-id="${esc(p.id)}"><span class="ph"><img src="${urlFor(p,'thumb')}" alt="" loading="lazy" decoding="async"></span><span class="tick"></span>${p.memo?`<span class="memo" aria-label="메모 있음">${icon('memo',12)}</span>`:''}<b>${ageText(photoMonths(p),' 때')}</b><span class="cap">${dot(p.date)}</span></button>`).join('');
   const none=list.length===0;
   $('a-empty').classList.toggle('hidden',!none);$('a-grid').classList.toggle('hidden',none);
   $('a-empty').querySelector('p').textContent=photos.length?`${chips.find(c=>c[0]===filter)[1]} 사진이 아직 없어요.`:'아직 사진이 없어요.';
@@ -1094,7 +1154,7 @@ async function shareOrDownload(blob,name){if(NATIVE){try{if(await nativeShare(bl
   if(dlNs){try{await dlNs.save({filename:name,data:blob});return}catch(e){toast('저장을 취소했어요');return}}download(blob,name)}
 $('db-save').onclick=()=>runBackup();
 async function runBackup(){$('db-save').disabled=true;$('db-save').textContent='백업 파일 만드는 중…';
-  const out=[];for(const p of photos)out.push({id:p.id,date:p.date,added:p.added,src:p.full instanceof Blob?await blobToDataURL(p.full):p.src});
+  const out=[];for(const p of photos)out.push({id:p.id,date:p.date,added:p.added,memo:p.memo||'',src:p.full instanceof Blob?await blobToDataURL(p.full):p.src});
   const data={app:'naesaekki',version:3,saved:new Date().toISOString(),pet,mentIdx,sort,theme,elements,myStickers,savedPals,photos:out};
   $('db-save').disabled=false;$('db-save').textContent='추억 백업하기 ↓';await store.set('lastBackup',Date.now());
   const blob=new Blob([JSON.stringify(data)],{type:'application/json'});await shareOrDownload(blob,`naesaekki-backup-${ymd(today())}.json`);
@@ -1110,7 +1170,7 @@ async function restoreNow(){const d=restoreArmed;if(!d)return;
   pet=d.pet;mentIdx=d.mentIdx||0;sort=d.sort||'ageAsc';theme=d.theme||clone(DEFAULT_THEME);elements=d.elements||[];myStickers=d.myStickers||[];savedPals=d.savedPals||[];
   for(const [k,v] of Object.entries({pet,mentIdx,sort,theme,elements,myStickers,savedPals}))await store.set(k,v);
   photos.forEach(dropUrls);await store.clearPhotos();photos=[];$('db-load').disabled=true;$('db-load').textContent='불러오는 중…';
-  for(const q of d.photos||[]){try{const bl=q.src?await makePhotoBlobs(q.src):{full:q.full,thumb:q.thumb};const p={id:q.id,date:q.date,added:q.added,...bl};await store.putPhoto(p);photos.push(p)}catch(_){}}
+  for(const q of d.photos||[]){try{const bl=q.src?await makePhotoBlobs(q.src):{full:q.full,thumb:q.thumb};const p={id:q.id,date:q.date,added:q.added,memo:q.memo||'',...bl};await store.putPhoto(p);photos.push(p)}catch(_){}}
   $('db-load').disabled=false;
   restoreArmed=null;$('db-load').textContent='백업 불러오기 ↑';$('db-load').onclick=pickBackup;closeD('d-backup');go('home');toast('백업을 불러왔어요')}
 
@@ -1131,7 +1191,11 @@ async function renderWallpaper(scale){
   const c=mkCanvas(W,H),x=c.getContext('2d'),B=box.getBoundingClientRect();x.scale(scale,scale);x.fillStyle=theme.bg;x.fillRect(0,0,390,H0);
   const R=n=>{const r=n.getBoundingClientRect();return {x:r.left-B.left,y:r.top-B.top,w:r.width,h:r.height}};
   const txt=n=>{const r=R(n),cs=getComputedStyle(n);x.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;x.fillStyle=cs.color;x.textAlign='center';x.textBaseline='middle';x.fillText(n.textContent,r.x+r.w/2,r.y+r.h/2)};
-  box.querySelectorAll('.pet-name,.hero>.muted,.age,.sub button').forEach(txt);
+  // 굵은 숫자가 섞인 줄: 조각별로 글꼴을 바꿔 가며 가운데 정렬로 그림
+  const rich=n=>{const r=R(n),runs=[...n.childNodes].map(c=>{const cs=getComputedStyle(c.nodeType===1?c:n);return {t:c.textContent,f:`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`,c:cs.color}});
+    let w=0;runs.forEach(u=>{x.font=u.f;u.w=x.measureText(u.t).width;w+=u.w});let cx=r.x+(r.w-w)/2;x.textAlign='left';x.textBaseline='middle';
+    runs.forEach(u=>{x.font=u.f;x.fillStyle=u.c;x.fillText(u.t,cx,r.y+r.h/2);cx+=u.w})};
+  box.querySelectorAll('.pet-name,.hero>.muted,.age,.sub .dot').forEach(txt);box.querySelectorAll('.sub button').forEach(rich);
   const m=box.querySelector('.ment');if(m){const r=R(m);x.fillStyle=theme.ink;x.fillRect(r.x+3,r.y+3,r.w,r.h);x.fillStyle=theme.bubble;x.fillRect(r.x,r.y,r.w,r.h);x.strokeStyle=theme.ink;x.lineWidth=2;x.strokeRect(r.x+1,r.y+1,r.w-2,r.h-2);txt(m)}
   const pimg=box.querySelector('.pet-photo img'),pr=R(box.querySelector('.pet-photo'));
   if(pimg){const im=await loadImg(pimg.src),k=Math.min(pr.w/im.width,pr.h/im.height);x.drawImage(im,pr.x+(pr.w-im.width*k)/2,pr.y+(pr.h-im.height*k)/2,im.width*k,im.height*k)}
@@ -1148,22 +1212,39 @@ async function renderWallpaper(scale){
     x.restore()}
   box.remove();return c}
 async function updateWallPreview(){const c=await renderWallpaper(1);$('w-img').src=c.toDataURL('image/png')}
-function openWall(){$('w-tip').textContent=NATIVE?'공유 창에서 ‘갤러리·사진’이나 ‘파일’을 골라 저장해 주세요.':'저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
+function openWall(){$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
 ['w-kind','w-ratio','w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
-$('w-save').onclick=async()=>{const c=await renderWallpaper(1080/390);$('w-img').src=c.toDataURL('image/png');$('w-tip').classList.remove('hidden');
-  c.toBlob(b=>b&&shareOrDownload(b,`naesaekki-${$('w-kind').value==='lock'?'lock':'home'}-${ymd(today())}.png`),'image/png')};
+$('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textContent='저장하는 중…';
+  try{const c=await renderWallpaper(1080/390),url=c.toDataURL('image/png');$('w-img').src=url;
+    const name=`naesaekki-${$('w-kind').value==='lock'?'lock':'home'}-${Date.now()}.png`;
+    // 앱(Android 10+)에서는 공유 창 없이 사진 앱의 '내새끼' 앨범에 바로 저장
+    const NS=plug('Naesaekki');
+    if(NS){try{await NS.saveImage({data:url.split(',')[1],name,mime:'image/png'});toast('사진 앱의 ‘내새끼’ 앨범에 저장했어요');return}catch(e){console.warn(e)}}
+    await shareOrDownload(dataURLtoBlob(url),name);if(!NATIVE)$('w-tip').classList.remove('hidden')}
+  catch(e){console.warn(e);toast('저장하지 못했어요')}
+  finally{btn.disabled=false;btn.textContent='이미지 저장'}};
 
 /* ---------- 사진첩 동작 ---------- */
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>go(t.dataset.tab));
-const addPhotos=()=>$('file-album').click();
+const addPhotos=()=>openD('d-addpick');
 $('a-add').onclick=addPhotos;$('a-empty-add').onclick=addPhotos;
-$('file-album').onchange=async e=>{const files=[...e.target.files];e.target.value='';if(!files.length)return;
-  toast(`${files.length}장 추가하는 중…`);let n=0;
-  for(const f of files){try{const [bl,ex]=await Promise.all([makePhotoBlobs(f),exifDate(f)]);
+$('dap-photos').onclick=()=>{closeD('d-addpick');$('file-album').click()};
+$('dap-folder').onclick=async()=>{closeD('d-addpick');const NS=plug('Naesaekki');
+  if(!NS){$('file-folder').click();return}
+  let list;try{list=(await NS.pickFolder()).files||[]}catch(e){return}
+  if(!list.length){toast('이 폴더에는 사진이 없어요');return}
+  // 폴더 안 사진은 한 장씩 읽어서 담기 (메모리 아끼기)
+  await ingest(list.map(f=>({get:async()=>{const d=(await NS.readFile({uri:f.uri})).data;return new File([dataURLtoBlob(`data:${f.mime};base64,${d}`)],f.name,{type:f.mime,lastModified:f.modified||Date.now()})}})))};
+$('file-album').onchange=e=>{const files=[...e.target.files];e.target.value='';ingest(files.map(f=>({get:async()=>f})))};
+$('file-folder').onchange=e=>{const files=[...e.target.files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|heic|gif)$/i.test(f.name));e.target.value='';
+  if(!files.length){toast('이 폴더에는 사진이 없어요');return}ingest(files.map(f=>({get:async()=>f})))};
+async function ingest(items){if(!items.length)return;let n=0,i=0;
+  for(const it of items){i++;if(items.length>3&&(i===1||i%5===0))toast(`${items.length}장 중 ${i}장째 담는 중…`);
+    try{const f=await it.get(),[bl,ex]=await Promise.all([makePhotoBlobs(f),exifDate(f)]);
     const date=ex||ymd(new Date(f.lastModified||Date.now()));
     const p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),...bl,date:date<pet.birth?pet.birth:date,added:Date.now()};
     await store.putPhoto(p);photos.push(p);n++}catch(_){}}
-  filter='all';renderAlbum();toast(n?`${n}장의 추억을 담았어요`:'사진을 추가하지 못했어요')};
+  filter='all';renderAlbum();toast(n?`${n}장의 추억을 담았어요`:'사진을 추가하지 못했어요')}
 $('a-chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;filter=c.dataset.f;renderAlbum()};
 $('a-sort').onclick=()=>{$('ds-list').innerHTML=SORTS.map(([v,l])=>`<button class="radio" data-s="${v}" role="radio" aria-checked="${sort===v}">${icon(sort===v?'radioOn':'radioOff')}${l}</button>`).join('');openD('d-sort')};
 $('ds-list').onclick=async e=>{const r=e.target.closest('[data-s]');if(!r)return;sort=r.dataset.s;await store.set('sort',sort);closeD('d-sort');renderAlbum()};
@@ -1177,10 +1258,33 @@ $('a-grid').onclick=e=>{const c=e.target.closest('.cell');if(!c)return;const id=
   if(editing){selected.has(id)?selected.delete(id):selected.add(id);renderAlbum();return}
   openPhoto=photos.find(p=>p.id===id);delArmed=false;$('dp-del').textContent='사진 삭제';
   $('dp-img').src=urlFor(openPhoto,'full');$('dp-date').value=openPhoto.date;$('dp-date').min=pet.birth;$('dp-date').max=ymd(today());
-  $('dp-age').textContent=ageText(photoMonths(openPhoto),' 때');openD('d-photo')};
+  $('dp-age').textContent=ageText(photoMonths(openPhoto),' 때');$('dp-memo').value=openPhoto.memo||'';openD('d-photo')};
 $('dp-date').oninput=()=>{const v=$('dp-date').value;if(v)$('dp-age').textContent=ageText(monthsBetween(parse(pet.birth),parse(v)),' 때')};
 $('dp-save').onclick=async()=>{const v=$('dp-date').value;if(!v){toast('날짜를 골라 주세요');return}
-  openPhoto.date=v<pet.birth?pet.birth:v;await store.putPhoto(openPhoto);closeD('d-photo');renderAlbum();toast('날짜를 고쳤어요')};
+  openPhoto.date=v<pet.birth?pet.birth:v;openPhoto.memo=$('dp-memo').value.trim();await store.putPhoto(openPhoto);closeD('d-photo');renderAlbum();toast('저장했어요')};
+/* 사진 크게 보기: 두 손가락으로 확대, 두 번 탭하면 확대/원래대로, 끌어서 이동 */
+const VW={s:1,x:0,y:0,ptrs:new Map(),g:null,lastTap:0};
+function vPaint(){$('v-img').style.transform=`translate(-50%,-50%) translate(${VW.x}px,${VW.y}px) scale(${VW.s})`}
+function openViewer(){$('v-img').src=$('dp-img').src;VW.s=1;VW.x=VW.y=0;vPaint();
+  const m=$('dp-memo').value.trim();$('v-memo').textContent=m;$('v-memo').classList.toggle('hidden',!m);$('viewer').classList.add('on')}
+const closeViewer=()=>$('viewer').classList.remove('on');
+$('dp-img').onclick=openViewer;$('v-close').onclick=closeViewer;
+$('v-close').innerHTML=icon('close',20,'#fff');
+const vw=$('viewer');
+function vStart(){const p=[...VW.ptrs.values()];VW.g={s:VW.s,x:VW.x,y:VW.y,c:mid(p),d:p.length>1?dist(p[0],p[1]):0,moved:false}}
+vw.addEventListener('pointerdown',e=>{if(e.target.closest('#v-close'))return;vw.setPointerCapture(e.pointerId);VW.ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});vStart()});
+vw.addEventListener('pointermove',e=>{if(!VW.ptrs.has(e.pointerId)||!VW.g)return;VW.ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  const p=[...VW.ptrs.values()],c=mid(p),g=VW.g;if(Math.hypot(c.x-g.c.x,c.y-g.c.y)>6)g.moved=true;
+  if(p.length>1&&g.d){VW.s=Math.max(1,Math.min(6,g.s*dist(p[0],p[1])/g.d));g.moved=true}
+  if(VW.s>1||p.length>1){VW.x=g.x+c.x-g.c.x;VW.y=g.y+c.y-g.c.y}else{VW.y=g.y+(c.y-g.c.y)}vPaint()});
+function vEnd(e){if(!VW.ptrs.has(e.pointerId))return;VW.ptrs.delete(e.pointerId);const g=VW.g;
+  if(VW.ptrs.size){vStart();return}VW.g=null;
+  if(VW.s<=1.02){VW.s=1;if(g&&Math.abs(VW.y)>120){closeViewer();return}VW.x=VW.y=0}
+  if(g&&!g.moved){const now=Date.now();if(now-VW.lastTap<300){if(VW.s>1){VW.s=1;VW.x=VW.y=0}else{const r=vw.getBoundingClientRect();VW.s=2.5;VW.x=-(e.clientX-r.width/2)*1.5;VW.y=-(e.clientY-r.height/2)*1.5}VW.lastTap=0}else VW.lastTap=now}
+  vPaint()}
+['pointerup','pointercancel'].forEach(t=>vw.addEventListener(t,vEnd));
+vw.addEventListener('wheel',e=>{e.preventDefault();VW.s=Math.max(1,Math.min(6,VW.s*(e.deltaY<0?1.15:1/1.15)));if(VW.s===1)VW.x=VW.y=0;vPaint()},{passive:false});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&vw.classList.contains('on')){e.stopImmediatePropagation();closeViewer()}},true);
 $('dp-del').onclick=async()=>{if(!delArmed){delArmed=true;$('dp-del').textContent='한 번 더 누르면 삭제돼요';return}
   dropUrls(openPhoto);await store.delPhoto(openPhoto.id);photos=photos.filter(p=>p!==openPhoto);closeD('d-photo');renderAlbum();toast('사진을 지웠어요')};
 
@@ -1191,6 +1295,7 @@ async function openPrivacy(){openD('d-privacy');if($('dpv-body').childElementCou
 
 /* 안드로이드 뒤로가기: 팝업 닫기 → 꾸미기 취소 → 홈으로 → 앱 종료 */
 if(NATIVE){const A=plug('App');if(A)A.addListener('backButton',()=>{
+  if($('viewer').classList.contains('on')){closeViewer();return}
   const open=[...document.querySelectorAll('.dim.on')].sort((a,b)=>(+getComputedStyle(b).zIndex)-(+getComputedStyle(a).zIndex))[0];
   if(open){if(!locked(open))open.classList.remove('on');return}
   if(tab==='custom'){$('c-cancel').click();return}
