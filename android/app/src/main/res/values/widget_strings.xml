@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_desc">내 새끼 사진과 지금 나이를 바탕화면에서 바로 봐요</string>
+    <string name="widget_photo">내 새끼 사진</string>
+    <string name="widget_age_sample">3살 4개월</string>
+    <string name="widget_name_sample">내새끼</string>
+</resources>

@@ -12,7 +12,7 @@
 <title>내새끼</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gowun+Dodum&family=Jua&family=Do+Hyeon&family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gowun+Dodum&family=Jua&family=Do+Hyeon&family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&family=Poor+Story&family=Single+Day&display=swap" rel="stylesheet">
 <style>
 /* VOICE: 반려동물 기록 앱 — 다정하고 장난스러운 '주접' 톤
    IDEA: Figma '내새끼' 디자인 시스템 — 2px 잉크 테두리 + 3px 픽셀 그림자, 20px 픽셀 아이콘
@@ -84,6 +84,17 @@ button{background:none;border:0;cursor:pointer;color:inherit}
 
 /* ---------- 홈 ---------- */
 #v-home{color:var(--t-ink)}
+.home-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px}
+.top-chip{height:32px;padding:0 12px;border:1.5px solid var(--t-ink);background:var(--white);box-shadow:2px 2px 0 var(--t-ink);font-size:12px;font-weight:700;color:var(--t-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+#h-mem{margin-left:auto}
+.g-rows{display:flex;flex-direction:column;gap:10px;max-height:34vh;overflow-y:auto}
+.g-row{display:flex;align-items:center;gap:8px}
+.g-row b{flex:none;width:34px;font-size:12px}
+.g-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.g-strip button{flex:none;width:48px;height:48px;border:1px solid var(--line);padding:0;overflow:hidden}
+.g-strip button[aria-pressed=true]{outline:3px solid var(--ink);outline-offset:-3px}
+.g-strip img{width:100%;height:100%;object-fit:cover;display:block}
+.mem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;max-height:60vh;overflow-y:auto}
 .home-body{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;padding-bottom:96px;overflow:hidden}
 .ment:active,.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 0 var(--ink)}
 
@@ -142,6 +153,9 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .editbar .btn{flex:1;min-width:0;padding:0 4px;font-size:13px}
 .editing .grid{touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .set-row.danger span:first-child{color:var(--danger)}
+.stk.locked{position:relative;opacity:.45}
+.stk.locked::after{content:'';position:absolute;right:2px;bottom:2px;width:7px;height:6px;background:var(--t-ink);border-radius:1px;box-shadow:0 -3px 0 -1px var(--white),0 -4px 0 0 var(--t-ink)}
+.pro-list{margin:0;padding-left:18px;font-size:13px;line-height:20px;display:flex;flex-direction:column;gap:4px}
 .editing .editbar{display:flex}
 
 /* ---------- 설정 ---------- */
@@ -175,6 +189,19 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .drawer.collapsed{padding-bottom:12px}
 .drawer.collapsed .pane{display:none!important}
 .ctabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));height:40px}
+.stk-seg{display:flex;justify-content:center;gap:16px}
+.stk-seg button{font-size:12px;line-height:20px;color:var(--muted);padding:2px 4px}
+.stk-seg button[aria-pressed=true]{color:var(--t-ink);font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.stk-pages{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.stk-pages::-webkit-scrollbar{display:none}
+.stk-page{flex:0 0 100%;scroll-snap-align:start;min-width:0;padding:2px}
+#c-draw{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;touch-action:none;display:none;cursor:crosshair}
+.stage.drawing #c-draw{display:block}
+.drw-tools{display:flex;gap:6px}.drw-tools .chip{flex:1;min-width:0;padding:0 2px}
+.drw-colors{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.drw-colors button{flex:none;width:26px;height:26px;border:1px solid var(--line)}
+.drw-colors button[aria-pressed=true]{outline:2px solid var(--t-ink);outline-offset:2px}
+.drw-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ctab{font-size:12px;line-height:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative}
 .ctab[aria-selected=true]{font-weight:700}
 .ctab[aria-selected=true]::after{content:"";position:absolute;bottom:4px;left:50%;width:60px;height:2px;margin-left:-30px;background:var(--t-ink)}
@@ -304,7 +331,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
 
   <!-- H01·H02 · 홈 -->
   <section class="view on home" id="v-home" aria-label="오늘">
-    <div class="header"></div>
+    <div class="header home-top"><button class="top-chip hidden" id="h-pets" aria-haspopup="dialog"></button><button class="top-chip hidden" id="h-mem" aria-haspopup="dialog"></button></div>
     <div class="home-body"><div class="hero-wrap" id="h-wrap"></div></div>
   </section>
 
@@ -313,6 +340,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="header">
       <h1 class="title" id="a-title"></h1>
       <div class="actions">
+        <button class="iconbtn" id="a-growth">성장</button>
         <button class="iconbtn" id="a-add" aria-label="사진 추가" data-icon="photoAdd"></button>
         <button class="iconbtn" id="a-edit">편집</button>
       </div>
@@ -341,8 +369,10 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   <section class="view" id="v-settings" aria-label="설정">
     <div class="header"><h1 class="title">설정</h1></div>
     <div class="set-list">
+      <button class="set-row" data-set="pro"><span style="font-weight:700">평생 이용권</span><span class="cap" id="set-pro-cap"></span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="custom"><span style="font-weight:700">홈 꾸미기</span><span class="cap">색상·스티커·멘트</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="petmgr"><span>내 새끼 관리</span><span class="cap">정보·사진</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="widget"><span>홈 화면 위젯</span><span class="cap">바탕화면에 나이·사진</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="wall"><span>배경화면으로 저장</span><span class="cap">홈·잠금화면</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="backup"><span>백업</span><span data-icon="chevron"></span></button>
       <button class="set-row hidden" data-set="install" id="set-install"><span>홈 화면에 앱으로 추가</span><span class="cap">더 안전하게 보관</span><span data-icon="chevron"></span></button>
@@ -360,15 +390,15 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
       <div class="c-side end"><button class="iconbtn" id="c-done">완료</button></div>
       <p class="c-hint">바꾸고 싶은 것을 다 눌러보세요</p>
     </div>
-    <div class="stage" id="c-stage"><div class="hero-wrap" id="c-wrap"></div>
+    <div class="stage" id="c-stage"><div class="hero-wrap" id="c-wrap"></div><canvas id="c-draw" aria-label="그림 그리는 곳"></canvas>
       <div class="hist"><button id="c-reset" class="c-reset">초기화</button><button id="c-undo" aria-label="되돌리기" title="되돌리기" data-icon="undo"></button><button id="c-redo" aria-label="다시 실행" title="다시 실행" data-icon="redo"></button></div>
     </div>
     <div class="drawer" id="c-drawer">
       <div class="ctabs" role="tablist">
         <button class="ctab" role="tab" data-ctab="color" aria-selected="true">색상</button>
         <button class="ctab" role="tab" data-ctab="text" aria-selected="false">텍스트</button>
-        <button class="ctab" role="tab" data-ctab="sticker" aria-selected="false">기본 스티커</button>
-        <button class="ctab" role="tab" data-ctab="mine" aria-selected="false">내 스티커</button>
+        <button class="ctab" role="tab" data-ctab="sticker" aria-selected="false">스티커</button>
+        <button class="ctab" role="tab" data-ctab="draw" aria-selected="false">그리기</button>
       </div>
       <!-- C01 색상 -->
       <div class="pane" data-pane="color">
@@ -406,8 +436,18 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
         </div>
       </div>
       <!-- C02 기본 스티커 / C03 내 스티커 -->
-      <div class="pane hidden" data-pane="sticker"><div class="stk-grid" id="c-stk"></div></div>
-      <div class="pane hidden" data-pane="mine"><div class="stk-grid" id="c-mine"></div></div>
+      <div class="pane hidden" data-pane="sticker">
+        <div class="stk-seg" id="stk-seg"><button data-pg="0" aria-pressed="true">기본 스티커</button><button data-pg="1" aria-pressed="false">내 스티커</button></div>
+        <div class="stk-pages" id="stk-pages"><div class="stk-page"><div class="stk-grid" id="c-stk"></div></div><div class="stk-page"><div class="stk-grid" id="c-mine"></div></div></div>
+      </div>
+      <!-- 그리기: 손글씨·도형 -->
+      <div class="pane hidden" data-pane="draw">
+        <div class="drw-tools" id="drw-tools"><button class="chip" data-tool="pen">펜</button><button class="chip" data-tool="line">직선</button><button class="chip" data-tool="rect">네모</button><button class="chip" data-tool="circle">동그라미</button><button class="chip" id="drw-fill" aria-pressed="false">채우기</button></div>
+        <div class="drw-colors" id="drw-colors"></div>
+        <div class="slider"><div class="lab"><label for="drw-w">굵기</label><span id="drw-w-v">6</span></div><input class="range" type="range" id="drw-w" min="2" max="30" value="6"></div>
+        <div class="drw-acts"><button class="btn thin" id="drw-undo">한 획 취소</button><button class="btn thin" id="drw-clear">다 지우기</button></div>
+        <p class="cap">위 화면에 손가락으로 그려 보세요. 다른 탭을 누르면 그림이 스티커가 돼서 옮기고 키울 수 있어요.</p>
+      </div>
       <div class="pane hidden sel-only-wrap" data-pane="adjust" id="c-adjust">
         <div class="adjust sel-only">
           <div class="slider"><div class="lab"><label for="c-size">크기</label><span id="c-size-v">50%</span></div><input class="range" type="range" id="c-size" min="0" max="100" value="50"></div>
@@ -440,11 +480,78 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   </div>
 </div>
 
+<div class="dim" id="d-pro" style="z-index:13" role="dialog" aria-modal="true" aria-labelledby="dpro-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dpro-t">내새끼 평생 이용권</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <p class="body12" id="pro-why"></p>
+    <p class="body12" id="pro-status" style="font-weight:700"></p>
+    <ul class="pro-list">
+      <li>사진첩 정리: 고양이(강아지) 없는 사진 고르기, 중복 사진 지우기</li>
+      <li>그리기: 손글씨, 직선·네모·동그라미, 도형 채우기</li>
+      <li>추가 글꼴 4종, 스티커 팩</li>
+      <li>내 스티커 무제한 (무료는 3개까지)</li>
+      <li>성장 모아보기 저장, 홈 화면 위젯</li>
+      <li>여러 마리 등록 (둘째부터)</li>
+      <li>배경화면 바로 지정</li>
+      <li>앞으로 추가될 유료 기능도 그대로</li>
+    </ul>
+    <p class="body12 hidden" id="pro-usage"></p>
+    <button class="btn" id="pro-buy">5,900원 · 한 번 결제로 평생</button>
+    <p class="cap" id="pro-price" style="text-align:center;margin-top:-6px">커피 한 잔 값으로 평생 · 매달 내는 돈 없어요</p>
+    <button class="btn ghost" id="pro-restore">구매 복원</button>
+    <p class="cap" id="pro-note">결제는 구글 플레이로 안전하게 처리돼요.</p>
+  </div>
+</div>
+<div class="dim" id="d-growth" role="dialog" aria-modal="true" aria-labelledby="dg-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dg-t">성장 모아보기</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <div class="wp-prev"><img id="g-img" alt="성장 모아보기 미리보기"></div>
+    <p class="cap">나이마다 한 장씩 골라 보세요. 사진을 누르면 바뀌어요.</p>
+    <div class="g-rows" id="g-rows"></div>
+    <button class="btn" id="g-save">이미지 저장</button>
+  </div>
+</div>
+<div class="dim" id="d-pets" role="dialog" aria-modal="true" aria-labelledby="dps-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dps-t">우리 집 아이들</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <div id="ps-list" role="radiogroup" aria-label="아이 고르기"></div>
+    <button class="btn" id="ps-add">아이 추가하기</button>
+  </div>
+</div>
+<div class="dim" id="d-delpet" style="z-index:13" role="dialog" aria-modal="true" aria-labelledby="ddp-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="ddp-t">이 아이 기록을 지울까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <p class="body12" id="ddp-body"></p>
+    <div class="row2"><button class="btn" data-close>취소</button><button class="btn danger" id="ddp-go">지우기</button></div>
+  </div>
+</div>
+<div class="dim" id="d-widget" role="dialog" aria-modal="true" aria-labelledby="dwg-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dwg-t">홈 화면 위젯</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <p class="body12">휴대폰 바탕화면에 내 새끼 사진과 지금 나이를 띄워 둘 수 있어요. 나이는 날마다 저절로 바뀌어요.</p>
+    <ol class="pro-list">
+      <li>휴대폰 바탕화면의 빈 곳을 길게 눌러요.</li>
+      <li>‘위젯’을 누르고 목록에서 ‘내새끼’를 찾아요.</li>
+      <li>원하는 자리에 끌어다 놓아요. 크기도 늘릴 수 있어요.</li>
+    </ol>
+    <p class="cap">위젯에는 지금 보고 있는 아이가 나와요. 사진은 ‘내 새끼 사진 바꾸기’에서 고른 사진이에요.</p>
+    <button class="btn" data-close>알겠어요</button>
+  </div>
+</div>
+<div class="dim" id="d-mem" role="dialog" aria-modal="true" aria-labelledby="dmem-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dmem-t">오늘의 추억</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <div class="mem-grid" id="mem-grid"></div>
+  </div>
+</div>
 <div class="dim" id="d-petmgr" role="dialog" aria-modal="true" aria-labelledby="dpm-t">
   <div class="dialog">
     <div class="dhead"><h2 id="dpm-t">내 새끼 관리</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <button class="btn" id="dpm-info">내 새끼 정보 바꾸기</button>
     <button class="btn" id="dpm-photo">내 새끼 사진 바꾸기</button>
+    <button class="btn" id="dpm-switch">다른 아이 보기</button>
+    <button class="btn" id="dpm-add">아이 추가하기</button>
+    <button class="btn ghost danger hidden" id="dpm-del">이 아이 기록 지우기</button>
   </div>
 </div>
 <div class="dim" id="d-albummgr" role="dialog" aria-modal="true" aria-labelledby="dam-t">
@@ -456,7 +563,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <button class="btn ghost danger" id="dam-reset">모든 기록 지우기</button>
   </div>
 </div>
-<div class="dim" id="d-setwall" role="dialog" aria-modal="true" aria-labelledby="dsw-t">
+<div class="dim" id="d-setwall" style="z-index:13" role="dialog" aria-modal="true" aria-labelledby="dsw-t">
   <div class="dialog">
     <div class="dhead"><h2 id="dsw-t">어디에 지정할까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <button class="btn" data-wall="lock">잠금화면</button>
@@ -464,7 +571,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <button class="btn" data-wall="both">둘 다</button>
   </div>
 </div>
-<div class="dim" id="d-reset" role="dialog" aria-modal="true" aria-labelledby="drs-t">
+<div class="dim" id="d-reset" style="z-index:13" role="dialog" aria-modal="true" aria-labelledby="drs-t">
   <div class="dialog">
     <div class="dhead"><h2 id="drs-t">모든 기록을 지울까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <p class="body12">사진첩, 내 새끼 정보, 홈 꾸미기까지 모두 지워지고 처음 화면으로 돌아가요. 지운 기록은 되돌릴 수 없어요. 필요하면 먼저 백업해 두세요.</p>
@@ -741,6 +848,17 @@ bowl:{d:'M2 5H18V6H19V9H18V12H17V14H15V16H5V14H3V12H2V9H1V6H2V5ZM4 7V9H16V7H4Z'}
 fish:{d:'M8 4H13V5H15V6H17V8H19V12H17V14H15V15H13V16H8V15H6V13H5V14H4V15H2V5H4V6H5V7H6V5H8V4ZM14 8V10H16V8H14ZM8 7V8H7V12H8V13H9V7H8Z'}
 };
 const STK_NAMES={heart:'하트',star:'반짝임',bow:'리본',flower:'꽃',paw:'발바닥',dog:'강아지 얼굴',cat:'고양이 얼굴',crown:'왕관',gift:'선물',butterfly:'나비',tulip:'튤립',bone:'뼈다귀',bowl:'사료 그릇',fish:'생선 간식'};
+// 평생 이용권 스티커 팩 (10×10 도트 → 20×20)
+const pxPath=rows=>{let d='';rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='X')d+=`M${x*2} ${y*2}h2v2h-2z`});return d};
+Object.assign(STK,{
+  moon:{pro:1,c:'#FFCA00',d:pxPath(['..XXXX....','.XXX......','XXX.......','XXX.......','XXX.......','XXX.......','XXXX......','.XXXX...X.','..XXXXXXX.','....XXXX..'])},
+  cloud:{pro:1,c:'#afd2f2',d:pxPath(['..........','...XXX....','..XXXXX...','.XXXXXXXX.','XXXXXXXXXX','XXXXXXXXXX','.XXXXXXXX.','..........','..........','..........'])},
+  note:{pro:1,d:pxPath(['....XXXXXX','....X....X','....X....X','....X....X','....X....X','..XXX..XXX','.XXXX.XXXX','.XXX..XXX.','..........','..........'])},
+  cake:{pro:1,c:'#f4afb5',d:pxPath(['....X.....','....X.....','...XXX....','.XXXXXXXX.','.X.X.X.XX.','.XXXXXXXX.','XXXXXXXXXX','X.X.X.X.XX','XXXXXXXXXX','..........'])},
+  house:{pro:1,d:pxPath(['....XX....','...XXXX...','..XXXXXX..','.XXXXXXXX.','XXXXXXXXXX','.XX....XX.','.XX.XX.XX.','.XX.XX.XX.','.XXXXXXXX.','..........'])},
+  smile:{pro:1,c:'#FFCA00',d:pxPath(['..XXXXXX..','.XXXXXXXX.','XX.XX.XX.X','XX.XX.XX.X','XXXXXXXXXX','XX.XXXX.XX','XXX....XXX','.XXXXXXXX.','..XXXXXX..','..........'])}
+});
+Object.assign(STK_NAMES,{moon:'달',cloud:'구름',note:'음표',cake:'케이크',house:'집',smile:'웃음'});
 function icon(k,size,color='#242620'){const a=P[k],vb=typeof a[a.length-1]==='number'?a[a.length-1]:20,ps=a.filter(x=>typeof x==='string');const s=size||vb;
   return `<svg class="px" aria-hidden="true" width="${s}" height="${s}" viewBox="0 0 ${vb} ${vb}">${ps.map(d=>`<path d="${d}" fill="${color}" fill-rule="evenodd"/>`).join('')}</svg>`}
 const stkSVG=(k,color,size=20)=>`<svg class="px" aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 20 20"><path d="${STK[k].d}" fill="${color}" fill-rule="evenodd"/></svg>`;
@@ -754,18 +872,20 @@ const SORTS=[['ageAsc','나이 오름차순'],['ageDesc','나이 내림차순'],
 const PALETTES=[['로즈','#fff5fa','#292b30','#f5cdd8','#c8738b'],['블루','#e3edf7','#283847','#ffffff','#bcd2ea'],['버터','#fffaed','#40352b','#ffe0b3','#cc8953'],['올리브','#f2f5d4','#30382c','#ffffff','#8c9c43'],
   ['라벤더','#e8e4f2','#342f43','#ffffff','#9c82b8'],['세이지','#e2ede7','#293d35','#f8f6ef','#6b9680'],['모카','#eee5db','#40352e','#fffdf8','#b48365'],['피치','#f6e2db','#493431','#fff8f0','#c57970']];
 const DEFAULT_THEME={bg:'#fff6fb',ink:'#242620',bubble:'#ffffff',point:'#bcd2ea'};
-const FONTS=[['Noto Sans KR','노토 산스'],['Gowun Dodum','고운돋움'],['Jua','주아'],['Do Hyeon','도현'],['Black Han Sans','검은고딕'],['Gaegu','개구'],['Nanum Pen Script','나눔펜']];
+const FONTS=[['Noto Sans KR','노토 산스'],['Gowun Dodum','고운돋움'],['Jua','주아'],['Do Hyeon','도현'],['Black Han Sans','검은고딕'],['Gaegu','개구'],['Nanum Pen Script','나눔펜'],['Gamja Flower','감자꽃',1],['Hi Melody','하이멜로디',1],['Poor Story','푸어스토리',1],['Single Day','싱글데이',1]];
 const COLORS=['#f4afb5','#f6c59f','#f7e5a0','#bbddb8','#afd2f2','#b6bedf','#d5b9e9','#ffffff','#e8e8e8','#b4b4b4','#818181','#424242','#000000'];
 
 /* ---------- 저장소: IndexedDB (안 되면 메모리) ---------- */
 let db=null;const mem={kv:{},photos:{}};
+// 여러 마리: 아이마다 따로 두는 값(정보·테마·꾸미기·멘트)은 'p아이디:키'로 저장. 첫째(p1)는 예전 키 그대로
+let CUR='p1',pets=[];const PER=new Set(['pet','theme','elements','mentIdx']);const K=k=>CUR!=='p1'&&PER.has(k)?CUR+':'+k:k;
 function openDB(){return new Promise(res=>{try{const r=indexedDB.open('naesaekki',1);
   r.onupgradeneeded=()=>{r.result.createObjectStore('kv');r.result.createObjectStore('photos',{keyPath:'id'})};
   r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>res()}catch(e){res()}})}
 function tx(store,mode,fn){return new Promise((res,rej)=>{try{const t=db.transaction(store,mode);const q=fn(t.objectStore(store));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)}catch(e){rej(e)}})}
 const store={
-  async get(k){if(!db)return mem.kv[k];try{return await tx('kv','readonly',s=>s.get(k))}catch(e){return mem.kv[k]}},
-  async set(k,v){mem.kv[k]=v;if(db)try{await tx('kv','readwrite',s=>s.put(v,k))}catch(e){toast('저장 공간이 부족해요')}},
+  async get(k){k=K(k);if(!db)return mem.kv[k];try{return await tx('kv','readonly',s=>s.get(k))}catch(e){return mem.kv[k]}},
+  async set(k,v){k=K(k);mem.kv[k]=v;if(db)try{await tx('kv','readwrite',s=>s.put(v,k))}catch(e){toast('저장 공간이 부족해요')}},
   async photos(){if(!db)return Object.values(mem.photos);try{return await tx('photos','readonly',s=>s.getAll())}catch(e){return Object.values(mem.photos)}},
   async putPhoto(p){mem.photos[p.id]=p;if(db)try{await tx('photos','readwrite',s=>s.put(p))}catch(e){toast('저장 공간이 부족해요')}},
   async delPhoto(id){delete mem.photos[id];if(db)try{await tx('photos','readwrite',s=>s.delete(id))}catch(e){}},
@@ -820,7 +940,7 @@ function applyTheme(el,t){el.style.setProperty('--t-bg',t.bg);el.style.setProper
 function elHTML(e,i){
   const tf=`translate(-50%,-50%) translate(${e.x}px,${e.y}px) rotate(${e.rot||0}deg) scale(${e.scale||1})`;
   if(e.type==='sticker')return `<div class="el" data-i="${i}" style="transform:${tf}">${stkSVG(e.key,e.color,40)}</div>`;
-  if(e.type==='image')return `<div class="el" data-i="${i}" style="transform:${tf}"><img src="${e.src}" alt=""></div>`;
+  if(e.type==='image')return `<div class="el" data-i="${i}" style="transform:${tf}"><img src="${e.src}" alt=""${e.w?` style="width:${e.w}px"`:''}></div>`;
   const deco=[e.underline?'underline':'',e.strike?'line-through':''].filter(Boolean).join(' ')||'none';
   return `<div class="el" data-i="${i}" style="transform:${tf};font-family:'${esc(e.font)}',sans-serif;font-size:${e.size}px;font-weight:${e.bold?700:400};font-style:${e.italic?'italic':'normal'};text-decoration:${deco};line-height:${(e.lh||130)/100};letter-spacing:${e.ls||0}px;text-align:${e.align||'center'};color:${e.color}">${esc(e.text)}</div>`;
 }
@@ -839,7 +959,65 @@ function heroHTML(els,opt={}){
 }
 
 /* ---------- 홈 ---------- */
-function renderHome(){applyTheme($('v-home'),theme);$('h-wrap').innerHTML=heroHTML(elements);requestAnimationFrame(rememberHeroPos)}
+/* ---------- 성장 모아보기: 나이마다 한 장씩 → 한 장짜리 이미지 (저장은 평생 이용권) ---------- */
+const GR={pick:{},t:0};
+function growthYears(){const by={};for(const p of photos){const y=Math.floor(photoMonths(p)/12);(by[y]=by[y]||[]).push(p)}
+  for(const y in by)by[y].sort((a,b)=>a.date.localeCompare(b.date));return by}
+function openGrowth(){const by=growthYears(),ys=Object.keys(by).map(Number).sort((a,b)=>a-b);
+  if(!ys.length){toast('사진첩에 사진을 먼저 올려 주세요');return}
+  for(const y of ys)if(!by[y].some(p=>p.id===GR.pick[y]))GR.pick[y]=by[y][by[y].length-1].id;
+  $('g-rows').innerHTML=ys.map(y=>`<div class="g-row"><b>${y}살</b><div class="g-strip">${by[y].map(p=>`<button data-gy="${y}" data-gid="${esc(p.id)}" aria-pressed="${GR.pick[y]===p.id}" aria-label="${ageText(photoMonths(p),' 때')}"><img src="${urlFor(p,'thumb')}" alt="" loading="lazy"></button>`).join('')}</div></div>`).join('');
+  openD('d-growth');drawGrowthPreview()}
+$('g-rows').onclick=e=>{const b=e.target.closest('[data-gid]');if(!b)return;GR.pick[b.dataset.gy]=b.dataset.gid;
+  b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));clearTimeout(GR.t);GR.t=setTimeout(drawGrowthPreview,150)};
+async function renderGrowth(){const by=growthYears(),ys=Object.keys(by).map(Number).sort((a,b)=>a-b),list=ys.map(y=>photos.find(p=>p.id===GR.pick[y])||by[y][0]);
+  const W=1080,M=72,G=48,cols=list.length===1?1:2,tile=Math.floor((W-2*M-(cols-1)*G)/cols),rows=Math.ceil(list.length/cols),lab=110,head=230,foot=90;
+  const H=head+rows*(tile+lab)+(rows-1)*24+foot,c=mkCanvas(W,H),x=c.getContext('2d'),ink=theme.ink;
+  try{await document.fonts.ready}catch(_){}
+  x.fillStyle=theme.bg;x.fillRect(0,0,W,H);x.fillStyle=ink;x.textAlign='center';x.textBaseline='alphabetic';
+  x.font=`900 64px 'Noto Sans KR',sans-serif`;x.fillText(`${pet.name}의 성장 기록`,W/2,120);
+  x.font=`500 30px 'Noto Sans KR',sans-serif`;x.globalAlpha=.7;x.fillText(`${dot(pet.birth)} 태어남 · 지금 ${ageText(monthsBetween(parse(pet.birth),today()))}`,W/2,172);x.globalAlpha=1;
+  for(let i=0;i<list.length;i++){const p=list[i],r=Math.floor(i/cols),k=i%cols,n=r===rows-1?list.length-r*cols:cols,off=(W-(n*tile+(n-1)*G))/2,
+      tx=off+k*(tile+G),ty=head+r*(tile+lab+24);
+    x.fillStyle=ink;x.fillRect(tx+12,ty+12,tile,tile);
+    try{const bm=await createImageBitmap(p.full instanceof Blob?p.full:p.thumb),s=Math.min(bm.width,bm.height);x.drawImage(bm,(bm.width-s)/2,(bm.height-s)/2,s,s,tx,ty,tile,tile);bm.close&&bm.close()}catch(_){x.fillStyle='#eee';x.fillRect(tx,ty,tile,tile)}
+    x.strokeStyle=ink;x.lineWidth=6;x.strokeRect(tx+3,ty+3,tile-6,tile-6);
+    x.fillStyle=ink;x.font=`900 44px 'Noto Sans KR',sans-serif`;x.fillText(`${Math.floor(photoMonths(p)/12)}살`,tx+tile/2,ty+tile+62);
+    x.font=`500 26px 'Noto Sans KR',sans-serif`;x.globalAlpha=.7;x.fillText(`${ageText(photoMonths(p),' 때')} · ${dot(p.date)}`,tx+tile/2,ty+tile+100);x.globalAlpha=1}
+  x.font=`700 26px 'Noto Sans KR',sans-serif`;x.globalAlpha=.5;x.fillText('내새끼',W/2,H-36);x.globalAlpha=1;return c}
+async function drawGrowthPreview(){try{const c=await renderGrowth();$('g-img').src=c.toDataURL('image/jpeg',.8)}catch(e){console.warn(e)}}
+$('a-growth').onclick=openGrowth;
+$('g-save').onclick=async()=>{if(!needPro('성장 모아보기 저장'))return;const b=$('g-save');b.disabled=true;b.textContent='저장하는 중…';
+  try{const c=await renderGrowth(),url=c.toDataURL('image/jpeg',.92),name=`naesaekki-growth-${Date.now()}.jpg`,NS=plug('Naesaekki');
+    if(NS){try{await NS.saveImage({data:url.split(',')[1],name,mime:'image/jpeg'});toast('사진 앱의 ‘내새끼’ 앨범에 저장했어요');return}catch(e){console.warn(e)}}
+    await shareOrDownload(dataURLtoBlob(url),name)}
+  finally{b.disabled=false;b.textContent='이미지 저장'}};
+/* ---------- 여러 마리: 아이 바꾸기·추가·지우기 (둘째부터 평생 이용권) ---------- */
+async function switchPet(id){await store.set('curPet',id);location.reload()}
+function paintPets(){const b=$('h-pets');if(pets.length<2||!pet){b.classList.add('hidden');return}b.textContent=`${pet.name} ▾`;b.classList.remove('hidden')}
+function openPets(){$('ps-list').innerHTML=pets.map(x=>`<button class="radio" role="radio" data-pid="${esc(x.id)}" aria-checked="${x.id===CUR}">${icon(x.id===CUR?'radioOn':'radioOff')}${esc(x.name)}</button>`).join('');openD('d-pets')}
+$('ps-list').onclick=e=>{const b=e.target.closest('[data-pid]');if(!b)return;if(b.dataset.pid===CUR){closeD('d-pets');return}switchPet(b.dataset.pid)};
+$('h-pets').onclick=openPets;$('ps-add').onclick=()=>{closeD('d-pets');addPet()};
+async function addPet(){if(pets.length>=1&&!needPro('여러 마리 등록'))return;await store.set('prevPet',CUR);switchPet('p'+Date.now().toString(36))}
+// 새 아이 소개 창을 닫으면 원래 아이로 돌아가기
+$('pet-x').addEventListener('click',async()=>{if(!pet&&pets.length)switchPet((await store.get('prevPet'))||pets[0].id)});
+$('ddp-go').onclick=async()=>{$('ddp-go').disabled=true;for(const p of photos)await store.delPhoto(p.id);
+  for(const k of PER){const key=K(k);delete mem.kv[key];if(db)try{await tx('kv','readwrite',s=>s.delete(key))}catch(_){}}
+  pets=pets.filter(x=>x.id!==CUR);await store.set('pets',pets);switchPet(pets[0]?pets[0].id:'p1')};
+// 홈 화면 위젯에 지금 아이 정보 넘기기 (바뀐 게 있을 때만)
+let widgetSig='';
+async function pushWidget(){const NS=plug('Naesaekki');if(!NS||!pet||DEMO)return;
+  const sig=[CUR,pet.name,pet.birth,(pet.photo||'').length,theme.ink,isPro()].join('|');if(sig===widgetSig)return;widgetSig=sig;
+  let photo='';if(pet.photo){try{const im=await loadImg(pet.photo),S=360,k=S/Math.max(im.width,im.height),c=mkCanvas(Math.round(im.width*k),Math.round(im.height*k));c.getContext('2d').drawImage(im,0,0,c.width,c.height);photo=c.toDataURL('image/png').split(',')[1]}catch(_){}}
+  NS.updateWidget({name:pet.name,birth:pet.birth,photo,pro:isPro(),ink:theme.ink}).catch(()=>{widgetSig=''})}
+function renderHome(){paintPets();setTimeout(pushWidget,300);applyTheme($('v-home'),theme);$('h-wrap').innerHTML=heroHTML(elements);requestAnimationFrame(rememberHeroPos);paintMemory()}
+// N년 전 오늘: 같은 월·일에 찍은 예전 사진이 있으면 홈 위에 작게 알려 주기
+function memories(){const t=today(),md=ymd(t).slice(5),y=t.getFullYear();return photos.filter(p=>p.date&&p.date.slice(5)===md&&+p.date.slice(0,4)<y).sort((a,b)=>b.date.localeCompare(a.date))}
+function paintMemory(){const m=memories(),b=$('h-mem');if(!m.length){b.classList.add('hidden');return}
+  const yrs=today().getFullYear()-+m[0].date.slice(0,4);b.textContent=`${yrs}년 전 오늘의 ${pet.name}`;b.classList.remove('hidden')}
+$('h-mem').onclick=()=>{const m=memories(),y=today().getFullYear();
+  $('mem-grid').innerHTML=m.map(p=>`<button class="cell" data-mid="${esc(p.id)}"><span class="ph"><img src="${urlFor(p,'thumb')}" alt="" loading="lazy"></span><b>${y-+p.date.slice(0,4)}년 전</b><span class="cap">${ageText(photoMonths(p),' 때')}</span></button>`).join('');openD('d-mem')};
+$('mem-grid').onclick=e=>{const c=e.target.closest('[data-mid]');if(!c)return;closeD('d-mem');openPhotoDlg(photos.find(p=>p.id===c.dataset.mid))};
 // 홈에서 내 새끼 카드의 가운데가 화면 높이의 어디쯤인지 기억해 둠 → 배경화면도 같은 자리에 그림
 function rememberHeroPos(){const r=$('h-wrap').getBoundingClientRect(),H=innerHeight;if(r.height>0&&H>0){const f=(r.top+r.height/2)/H;if(f>.2&&f<.8){try{localStorage.setItem('heroFrac',f.toFixed(4))}catch(_){}}}}
 function heroFrac(){rememberHeroPos();let f=NaN;try{f=parseFloat(localStorage.getItem('heroFrac'))}catch(_){}return f>.2&&f<.8?f:.45}
@@ -896,7 +1074,7 @@ function applyGlobal(t){const r=document.documentElement.style;
   r.setProperty('--chip-on',`color-mix(in srgb,${t.point} 45%,#fff)`);
   applyTheme(document.documentElement,t);
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t.bg}
-function go(t){
+function go(t){if(t==='settings')paintPro();
   tab=t;$('app').classList.toggle('customizing',t==='custom');
   document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   ['home','album','settings','custom'].forEach(v=>$('v-'+v).classList.toggle('on',v===t));
@@ -920,7 +1098,7 @@ function openPet(first){
   $('pf-name').value=pdraft.name||'';$('pf-birth').value=pdraft.birth||'';$('pf-birth').max=ymd(today());
   $('pf-kind').value=pdraft.kind;$('pf-size').value=pdraft.size;$('pf-size-f').classList.toggle('hidden',pdraft.kind!=='dog');
   $('pf-photo').classList.toggle('hidden',!first);$('pf-photo').textContent=pdraft.photo?'사진 바꾸기 ✓':'사진 고르기';
-  $('pet-x').classList.toggle('hidden',first);$('dpet-t').textContent=first?'내 새끼를 소개해 주세요':'내 새끼 정보';
+  $('pet-x').classList.toggle('hidden',first&&!pets.length);$('dpet-t').textContent=first?'내 새끼를 소개해 주세요':'내 새끼 정보';
   openD('d-pet');
 }
 $('pf-kind').onchange=()=>$('pf-size-f').classList.toggle('hidden',$('pf-kind').value!=='dog');
@@ -929,7 +1107,8 @@ $('pet-form').onsubmit=async e=>{e.preventDefault();
   if(!name||!birth){toast('이름과 생일을 입력해 주세요');return}
   if(birth>ymd(today())){toast('생일은 오늘 이전이어야 해요');return}
   pet={...pdraft,name,birth,kind:$('pf-kind').value,size:$('pf-size').value};
-  const first=!(await store.get('pet'));await store.set('pet',pet);closeD('d-pet');go(tab==='custom'?'home':tab);toast('저장했어요');if(first)setTimeout(()=>showInstall(true),1500);
+  const first=!(await store.get('pet'));await store.set('pet',pet);
+  const pe=pets.find(x=>x.id===CUR);if(pe)pe.name=pet.name;else pets.push({id:CUR,name:pet.name});await store.set('pets',pets);closeD('d-pet');go(tab==='custom'?'home':tab);toast('저장했어요');if(first)setTimeout(()=>showInstall(true),1500);
 };
 
 /* ---------- P03·P04 누끼 편집기 ---------- */
@@ -1044,7 +1223,7 @@ $('file-pet').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(
 /* ---------- C01~C13 홈 꾸미기 ---------- */
 const draft={theme:null,els:[],sel:-1,hist:[],redo:[]};
 const stageEl=$('c-stage'),drawer=$('c-drawer');let ctab='color',textDraft=null;
-function openCustom(){draft.ment=pet.ment||'';draft.theme=clone(theme);draft.els=clone(elements);draft.sel=-1;draft.hist=[];draft.redo=[];draft.start=snapState();go('custom');setCtab('color');renderCustom()}
+function openCustom(){DR.strokes=[];DR.cur=null;draft.ment=pet.ment||'';draft.theme=clone(theme);draft.els=clone(elements);draft.sel=-1;draft.hist=[];draft.redo=[];draft.start=snapState();go('custom');setCtab('color');renderCustom()}
 const snapState=()=>JSON.stringify({t:draft.theme,e:draft.els,m:draft.ment});
 function pushHist(){draft.redo=[];draft.hist.push(snapState());if(draft.hist.length>50)draft.hist.shift()}
 function renderCustom(){
@@ -1059,7 +1238,7 @@ function renderPanes(){
   $('c-pals').innerHTML=PALETTES.map((p,i)=>`<button class="pal" data-pal="${i}" aria-pressed="${i===cur}" aria-label="${p[0]}">${p.slice(1).map(c=>`<i style="background:${c}"></i>`).join('')}</button>`).join('');
   $('c-roles').innerHTML=[['bg','배경'],['ink','글씨'],['bubble','말풍선'],['point','포인트']].map(([k,l])=>`<button class="role" data-role="${k}">${l}<i style="background:${t[k]}"></i></button>`).join('');
   const e=selEl();
-  $('c-stk').innerHTML=Object.keys(STK).map(k=>`<button class="stk" data-stk="${k}" aria-label="${STK_NAMES[k]}" aria-pressed="${!!(e&&e.type==='sticker'&&e.key===k)}">${stkSVG(k,draft.theme.ink,20)}</button>`).join('');
+  $('c-stk').innerHTML=Object.keys(STK).map(k=>`<button class="stk${STK[k].pro&&!isPro()?' locked':''}" data-stk="${k}" aria-label="${STK_NAMES[k]}${STK[k].pro?' (이용권)':''}" aria-pressed="${!!(e&&e.type==='sticker'&&e.key===k)}">${stkSVG(k,draft.theme.ink,20)}</button>`).join('');
   const slots=[...myStickers.map((s,i)=>`<button class="stk slot" data-my="${i}" aria-label="내 스티커 ${i+1}" aria-pressed="${!!(e&&e.type==='image'&&e.src===s.src)}"><img src="${s.src}" alt=""></button>`)];
   while(slots.length<13)slots.push('<span class="stk slot" aria-hidden="true"></span>');
   slots.push(`<button class="stk add" id="c-addmine" aria-label="스티커 만들기">${icon('plus',16,'currentColor')}</button>`);
@@ -1072,12 +1251,52 @@ function renderPanes(){
   $('c-undo').disabled=!draft.hist.length;$('c-redo').disabled=!draft.redo.length;
   if(ctab==='text')fillText();
 }
-function setCtab(t){ctab=t;drawer.classList.remove('collapsed');
+/* ---------- 그리기: 펜·직선·네모·동그라미 → 그림 스티커로 붙이기 ---------- */
+const DR={tool:'pen',fill:false,color:null,w:6,strokes:[],cur:null,k:1},drCv=$('c-draw');
+function drSize(){const r=stageEl.getBoundingClientRect();if(!r.width)return;DR.k=Math.min(2,devicePixelRatio||1);drCv.width=Math.round(r.width*DR.k);drCv.height=Math.round(r.height*DR.k);drPaint()}
+function drStroke(x,s){const p=s.pts,a=p[0],b=p[p.length-1];x.strokeStyle=s.color;x.lineWidth=s.w;x.lineCap='round';x.lineJoin='round';x.beginPath();
+  if(s.tool==='pen'){x.moveTo(a.x,a.y);if(p.length<3)x.lineTo(b.x+.01,b.y);else{for(let i=1;i<p.length-1;i++)x.quadraticCurveTo(p[i].x,p[i].y,(p[i].x+p[i+1].x)/2,(p[i].y+p[i+1].y)/2);x.lineTo(b.x,b.y)}}
+  else if(s.tool==='line'){x.moveTo(a.x,a.y);x.lineTo(b.x,b.y)}
+  else if(s.tool==='rect')x.rect(Math.min(a.x,b.x),Math.min(a.y,b.y),Math.abs(b.x-a.x),Math.abs(b.y-a.y));
+  else x.ellipse((a.x+b.x)/2,(a.y+b.y)/2,Math.abs(b.x-a.x)/2||.5,Math.abs(b.y-a.y)/2||.5,0,0,Math.PI*2);
+  if(s.fill&&(s.tool==='rect'||s.tool==='circle')){x.fillStyle=s.color;x.fill()}
+  x.stroke()}
+function drPaint(){const x=drCv.getContext('2d');x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,drCv.width,drCv.height);x.setTransform(DR.k,0,0,DR.k,0,0);DR.strokes.forEach(s=>drStroke(x,s));if(DR.cur)drStroke(x,DR.cur)}
+function drUI(){const cols=[draft.theme.ink,...COLORS.filter(c=>c!==draft.theme.ink)];if(!DR.color)DR.color=draft.theme.ink;
+  $('drw-colors').innerHTML=cols.map(c=>`<button style="background:${c}" data-c="${c}" aria-label="색 ${c}" aria-pressed="${c===DR.color}"></button>`).join('');
+  $('drw-tools').querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===DR.tool));$('drw-fill').setAttribute('aria-pressed',DR.fill);
+  $('drw-w').value=DR.w;$('drw-w-v').textContent=DR.w;$('drw-w').style.setProperty('--p',((DR.w-2)/28*100)+'%');
+  $('drw-undo').disabled=!DR.strokes.length;$('drw-clear').disabled=!DR.strokes.length}
+const drPt=e=>{const r=drCv.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}};
+drCv.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();if(DR.cur)return;try{drCv.setPointerCapture(e.pointerId)}catch(_){}DR.pid=e.pointerId;DR.cur={tool:DR.tool,fill:DR.fill,color:DR.color,w:DR.w,pts:[drPt(e)]};drPaint()});
+drCv.addEventListener('pointermove',e=>{if(!DR.cur||e.pointerId!==DR.pid)return;const p=drPt(e);if(DR.cur.tool==='pen')DR.cur.pts.push(p);else DR.cur.pts=[DR.cur.pts[0],p];drPaint()});
+function drEnd(e){if(!DR.cur||e.pointerId!==DR.pid)return;const s=DR.cur;DR.cur=null;const a=s.pts[0],b=s.pts[s.pts.length-1];
+  if(s.tool==='pen'||Math.hypot(b.x-a.x,b.y-a.y)>4)DR.strokes.push(s);drPaint();drUI()}
+['pointerup','pointercancel'].forEach(t=>drCv.addEventListener(t,drEnd));
+$('drw-tools').onclick=e=>{if(e.target.closest('#drw-fill')){DR.fill=!DR.fill;if(DR.fill&&DR.tool!=='rect'&&DR.tool!=='circle')DR.tool='rect';drUI();return}const b=e.target.closest('[data-tool]');if(!b)return;DR.tool=b.dataset.tool;drUI()};
+$('drw-colors').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;DR.color=b.dataset.c;drUI()};
+$('drw-w').oninput=()=>{DR.w=+$('drw-w').value;drUI()};
+$('drw-undo').onclick=()=>{DR.strokes.pop();drPaint();drUI()};
+$('drw-clear').onclick=()=>{DR.strokes=[];drPaint();drUI()};
+function drCommit(){if(!DR.strokes.length)return false;let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for(const s of DR.strokes){const m=s.w/2+2;for(const p of s.pts){x0=Math.min(x0,p.x-m);y0=Math.min(y0,p.y-m);x1=Math.max(x1,p.x+m);y1=Math.max(y1,p.y+m)}}
+  const W=drCv.width/DR.k,H=drCv.height/DR.k;x0=Math.max(0,Math.floor(x0));y0=Math.max(0,Math.floor(y0));x1=Math.min(W,Math.ceil(x1));y1=Math.min(H,Math.ceil(y1));
+  const bw=x1-x0,bh=y1-y0;if(bw<2||bh<2){DR.strokes=[];drPaint();drUI();return false}
+  DR.cur=null;drPaint();const k=DR.k,c=mkCanvas(Math.round(bw*k),Math.round(bh*k));c.getContext('2d').drawImage(drCv,x0*k,y0*k,bw*k,bh*k,0,0,c.width,c.height);
+  bump('draw');pushHist();draft.els.push({type:'image',src:c.toDataURL('image/png'),w:bw,x:Math.round(x0+bw/2-W/2),y:Math.round(y0+bh/2-H/2),rot:0,scale:1,draw:true});draft.sel=-1;
+  DR.strokes=[];drPaint();drUI();renderCustom();return true}
+new ResizeObserver(()=>{if(stageEl.classList.contains('drawing'))drSize()}).observe(stageEl);
+// 스티커: 기본 ↔ 내 스티커를 옆으로 밀어서 넘기기
+function stkPage(i,smooth){const pg=$('stk-pages');pg.scrollTo({left:i*pg.clientWidth,behavior:smooth?'smooth':'auto'});stkSeg(i)}
+function stkSeg(i){$('stk-seg').querySelectorAll('[data-pg]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.pg===i))}
+$('stk-seg').onclick=e=>{const b=e.target.closest('[data-pg]');if(b)stkPage(+b.dataset.pg,true)};
+$('stk-pages').addEventListener('scroll',()=>{const pg=$('stk-pages');if(pg.clientWidth)stkSeg(Math.round(pg.scrollLeft/pg.clientWidth))},{passive:true});
+function setCtab(t){if(ctab==='draw'&&t!=='draw')drCommit();ctab=t;drawer.classList.remove('collapsed');stageEl.classList.toggle('drawing',t==='draw');if(t==='draw'){drSize();drUI()}
   document.querySelectorAll('.ctab').forEach(b=>b.setAttribute('aria-selected',b.dataset.ctab===t));
-  document.querySelectorAll('#c-drawer [data-pane]').forEach(p=>p.classList.toggle('hidden',!(p.dataset.pane===t||(p.dataset.pane==='adjust'&&(t==='sticker'||t==='mine')))));
+  document.querySelectorAll('#c-drawer [data-pane]').forEach(p=>p.classList.toggle('hidden',!(p.dataset.pane===t||(p.dataset.pane==='adjust'&&t==='sticker'))));
   if(t==='text'){$('t-detail').classList.add('hidden');$('t-basic').classList.remove('hidden');fillText()}
 }
-document.querySelector('.ctabs').onclick=e=>{const b=e.target.closest('.ctab');if(b)setCtab(b.dataset.ctab)};
+document.querySelector('.ctabs').onclick=e=>{const b=e.target.closest('.ctab');if(!b)return;if(b.dataset.ctab==='draw'&&!needPro('그리기'))return;setCtab(b.dataset.ctab)};
 $('c-pals').onclick=e=>{const b=e.target.closest('[data-pal]');if(!b)return;pushHist();const p=PALETTES[+b.dataset.pal];draft.theme={bg:p[1],ink:p[2],bubble:p[3],point:p[4]};renderCustom()};
 $('c-roles').onclick=e=>{const b=e.target.closest('[data-role]');if(!b)return;const k=b.dataset.role;openColor(draft.theme[k],c=>{pushHist();draft.theme[k]=c;renderCustom()})};
 $('c-savepal').onclick=async()=>{const t=draft.theme,key=[t.bg,t.ink,t.bubble,t.point].join();if(savedPals.some(p=>p.join()===key)){toast('이미 저장된 조합이에요');return}
@@ -1088,7 +1307,7 @@ $('dsv-list').onclick=async e=>{const a=e.target.closest('[data-sp]'),d=e.target
   if(a){pushHist();const p=savedPals[+a.dataset.sp];draft.theme={bg:p[0],ink:p[1],bubble:p[2],point:p[3]};closeD('d-saved');renderCustom()}
   if(d){savedPals.splice(+d.dataset.spdel,1);await store.set('savedPals',savedPals);renderSaved()}};
 $('c-totext').onclick=()=>{draft.sel=-1;setCtab('text');renderCustom()};
-FONTS.forEach(([f,l])=>$('t-font').insertAdjacentHTML('beforeend',`<option value="${f}" style="font-family:'${f}'">${l}</option>`));
+FONTS.forEach(([f,l,pro])=>$('t-font').insertAdjacentHTML('beforeend',`<option value="${f}" style="font-family:'${f}'">${l}${pro?' · 이용권':''}</option>`));
 function newText(){return {type:'text',text:'',font:'Noto Sans KR',size:20,bold:false,italic:false,underline:false,strike:false,lh:130,ls:0,align:'center',color:draft.theme.ink,x:0,y:-Math.max(40,Math.min(150,stageEl.clientHeight/2-70)),rot:0,scale:1}}
 function curText(){const e=selEl();if(e&&e.type==='text')return e;if(!textDraft)textDraft=newText();return textDraft}
 function fillText(){const t=curText();if(document.activeElement!==$('t-text'))$('t-text').value=t.text;$('t-font').value=t.font;$('t-size').value=t.size;$('t-lh').value=t.lh;$('t-ls').value=t.ls;
@@ -1102,7 +1321,7 @@ $('t-text').oninput=e=>{const v=e.target.value;
   if(!(selEl()&&selEl().type==='text')&&v.trim()){const t=curText();t.text=v;pushHist();textEdited=true;draft.els.push(t);draft.sel=draft.els.length-1;textDraft=null;renderCustom();return}
   editText(t=>t.text=v)};
 $('t-text').onfocus=()=>{textEdited=false};
-$('t-font').onchange=e=>{textEdited=false;editText(t=>t.font=e.target.value)};
+$('t-font').onchange=e=>{const f=FONTS.find(x=>x[0]===e.target.value);if(f&&f[2]&&!needPro('추가 글꼴')){e.target.value=curText().font;return}textEdited=false;editText(t=>t.font=e.target.value)};
 const setSize=v=>editText(t=>t.size=Math.max(10,Math.min(64,Math.round(v)||20)));
 $('t-size').onchange=e=>{textEdited=false;setSize(+e.target.value)};$('t-minus').onclick=()=>{textEdited=false;setSize(curText().size-2)};$('t-plus').onclick=()=>{textEdited=false;setSize(curText().size+2)};
 const setLh=v=>{textEdited=false;editText(t=>t.lh=Math.max(80,Math.min(300,Math.round(v)||130)))};
@@ -1119,9 +1338,9 @@ $('t-apply').onclick=()=>{const t=curText();if(!t.text.trim()){toast('문구를 
   if(t===textDraft){pushHist();draft.els.push(t);draft.sel=draft.els.length-1;textDraft=null}
   drawer.classList.add('collapsed');renderCustom();toast('끌어서 원하는 곳에 놓아 주세요')};
 $('t-del').onclick=()=>{const e=selEl();if(e&&e.type==='text'){pushHist();draft.els.splice(draft.sel,1);draft.sel=-1;renderCustom()}else{textDraft=newText();fillText()}};
-$('c-stk').onclick=e=>{const b=e.target.closest('[data-stk]');if(!b)return;pushHist();const k=b.dataset.stk;
+$('c-stk').onclick=e=>{const b=e.target.closest('[data-stk]');if(!b)return;const k=b.dataset.stk;if(STK[k].pro&&!needPro('추가 스티커'))return;pushHist();
   const n=draft.els.length;draft.els.push({type:'sticker',key:k,color:STK[k].c||draft.theme.point,x:((n*37)%140)-70,y:-60+((n*53)%80),rot:0,scale:.5});draft.sel=draft.els.length-1;renderCustom()};
-$('c-mine').onclick=e=>{if(e.target.closest('#c-addmine')){openMySticker();return}const b=e.target.closest('[data-my]');if(!b)return;pushHist();
+$('c-mine').onclick=e=>{if(e.target.closest('#c-addmine')){if(myStickers.length>=3&&!needPro('내 스티커 4개부터'))return;openMySticker();return}const b=e.target.closest('[data-my]');if(!b)return;pushHist();
   draft.els.push({type:'image',src:myStickers[+b.dataset.my].src,x:70,y:-40,rot:0,scale:.5});draft.sel=draft.els.length-1;renderCustom()};
 let myLp;$('c-mine').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-my]');if(!b)return;myLp=setTimeout(async()=>{myLp='done';const i=+b.dataset.my;
   if(b.dataset.armed){myStickers.splice(i,1);await store.set('myStickers',myStickers);renderPanes();toast('내 스티커를 지웠어요')}else{b.dataset.armed=1;toast('한 번 더 길게 누르면 이 스티커를 지워요')}},600)});
@@ -1151,7 +1370,7 @@ stageEl.addEventListener('pointerdown',e=>{
       renderCustom()}
     else if(draft.sel>=0){ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});startGesture()}return}
   e.preventDefault();const i=+n.dataset.i;
-  if(draft.sel!==i){draft.sel=i;const el=selEl();if(el.type==='text'){textDraft=null;if(ctab!=='text')setCtab('text');drawer.classList.add('collapsed')}else if(ctab!=='sticker'&&ctab!=='mine')setCtab(el.type==='image'?'mine':'sticker');renderCustom()}
+  if(draft.sel!==i){draft.sel=i;const el=selEl();if(el.type==='text'){textDraft=null;if(ctab!=='text')setCtab('text');drawer.classList.add('collapsed')}else{if(ctab!=='sticker')setCtab('sticker');stkPage(el.type==='image'?1:0)}renderCustom()}
   stageEl.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});startGesture()});
 function startGesture(){const el=selEl();if(!el)return;const p=[...ptrs.values()];draft.hist.push(snapState());
   gest={x:el.x,y:el.y,scale:el.scale||1,rot:el.rot||0,c:mid(p),d:p.length>1?dist(p[0],p[1]):0,a:p.length>1?ang(p[0],p[1]):0,moved:false}}
@@ -1165,10 +1384,10 @@ stageEl.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId)||!gest)retu
 function endPtr(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);
   if(gest){if(gest.moved)draft.redo=[];else draft.hist.pop()}gest=null;if(ptrs.size)startGesture();else renderPanes()}
 ['pointerup','pointercancel'].forEach(t=>stageEl.addEventListener(t,endPtr));
-function quitCustom(){textDraft=null;closeD('d-quit');go('settings')}
+function quitCustom(){textDraft=null;DR.strokes=[];DR.cur=null;stageEl.classList.remove('drawing');closeD('d-quit');go('settings')}
 $('c-cancel').onclick=()=>{if(snapState()===draft.start&&!(textDraft&&textDraft.text)){quitCustom();return}openD('d-quit')};
 $('dq-go').onclick=()=>{quitCustom();toast('꾸민 내용을 저장하지 않았어요')};
-$('c-done').onclick=async()=>{theme=draft.theme;elements=draft.els;if(pet.ment!==draft.ment){pet.ment=draft.ment;await store.set('pet',pet)}textDraft=null;await store.set('theme',theme);await store.set('elements',elements);go('home');toast('홈을 꾸몄어요')};
+$('c-done').onclick=async()=>{if(ctab==='draw')drCommit();theme=draft.theme;elements=draft.els;if(pet.ment!==draft.ment){pet.ment=draft.ment;await store.set('pet',pet)}textDraft=null;await store.set('theme',theme);await store.set('elements',elements);go('home');toast('홈을 꾸몄어요')};
 
 /* C06 내 스티커 만들기 */
 let msSrc=null;
@@ -1181,8 +1400,8 @@ $('dms-save').onclick=async()=>{closeD('d-mysticker');await addMySticker(msSrc)}
 async function addMySticker(src){
   if(myStickers.length>=13){toast('내 스티커는 13개까지 저장돼요. 길게 눌러 하나를 지워 주세요');return}
   const img=await loadImg(src),k=Math.min(1,400/Math.max(img.width,img.height)),c=mkCanvas(Math.round(img.width*k),Math.round(img.height*k));c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-  myStickers.push({id:Date.now().toString(36),src:c.toDataURL('image/png')});await store.set('myStickers',myStickers);
-  if(tab==='custom'){setCtab('mine');renderPanes()}toast('내 스티커로 저장했어요')}
+  myStickers.push({id:Date.now().toString(36),src:c.toDataURL('image/png')});await store.set('myStickers',myStickers);bump('stk');
+  if(tab==='custom'){setCtab('sticker');stkPage(1);renderPanes()}toast('내 스티커로 저장했어요')}
 
 /* ---------- C04·C05 색상 선택 ---------- */
 let colorCb=null,hsv=[0,0,1];
@@ -1207,9 +1426,11 @@ $('dc-apply').onclick=()=>{closeD('d-color');colorCb&&colorCb(hsv2hex(hsv))};
 $('set-privacy').onclick=()=>openPrivacy();
 document.querySelector('.set-list').onclick=e=>{const b=e.target.closest('[data-set]');if(!b)return;const k=b.dataset.set;
   if(k==='pet')openPet(false);else if(k==='photo')changePhoto();else if(k==='custom')openCustom();
-  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='petmgr')openD('d-petmgr');else if(k==='albummgr'){$('dam-nopet').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;openD('d-albummgr')}};
+  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='petmgr'){$('dpm-switch').classList.toggle('hidden',pets.length<2);$('dpm-del').classList.toggle('hidden',pets.length<2);openD('d-petmgr')}else if(k==='pro')openPro();else if(k==='widget'){if(needPro('홈 화면 위젯'))openD('d-widget')}else if(k==='albummgr'){$('dam-nopet').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;openD('d-albummgr')}};
+$('dpm-switch').onclick=()=>{closeD('d-petmgr');openPets()};$('dpm-add').onclick=()=>{closeD('d-petmgr');addPet()};
+$('dpm-del').onclick=()=>{closeD('d-petmgr');$('ddp-body').textContent=`${pet.name}의 정보, 사진 ${photos.length.toLocaleString('ko-KR')}장, 홈 꾸미기가 모두 지워져요. 되돌릴 수 없어요.`;openD('d-delpet')};
 $('dpm-info').onclick=()=>{closeD('d-petmgr');openPet(false)};$('dpm-photo').onclick=()=>{closeD('d-petmgr');changePhoto()};
-$('dam-nopet').onclick=()=>{closeD('d-albummgr');pickNoPet()};$('dam-dupes').onclick=()=>{closeD('d-albummgr');removeDupes()};$('dam-reset').onclick=()=>{closeD('d-albummgr');openD('d-reset')};
+$('dam-nopet').onclick=()=>{closeD('d-albummgr');if(needPro('사진첩 정리'))pickNoPet()};$('dam-dupes').onclick=()=>{closeD('d-albummgr');if(needPro('사진첩 정리'))removeDupes()};$('dam-reset').onclick=()=>{closeD('d-albummgr');openD('d-reset')};
 
 /* S02 백업 */
 function download(blob,name){try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);return true}catch(e){return false}}
@@ -1222,7 +1443,7 @@ async function shareOrDownload(blob,name){if(NATIVE){try{if(await nativeShare(bl
 $('db-save').onclick=()=>runBackup();
 async function runBackup(){$('db-save').disabled=true;$('db-save').textContent='백업 파일 만드는 중…';
   const out=[];for(const p of photos)out.push({id:p.id,date:p.date,added:p.added,memo:p.memo||'',src:p.full instanceof Blob?await blobToDataURL(p.full):p.src});
-  const data={app:'naesaekki',version:3,saved:new Date().toISOString(),pet,mentIdx,sort,theme,elements,myStickers,savedPals,photos:out};
+  const data={app:'naesaekki',version:3,saved:new Date().toISOString(),trialStart,pet,mentIdx,sort,theme,elements,myStickers,savedPals,photos:out};
   $('db-save').disabled=false;$('db-save').textContent='추억 백업하기 ↓';await store.set('lastBackup',Date.now());
   const blob=new Blob([JSON.stringify(data)],{type:'application/json'});await shareOrDownload(blob,`naesaekki-backup-${ymd(today())}.json`);
   $('db-note').textContent=`사진 ${photos.length}장을 담은 백업 파일을 만들었어요. 저장되지 않았다면 홈 화면에 설치한 앱에서 다시 시도해 주세요.`;$('db-note').classList.remove('hidden')}
@@ -1236,8 +1457,9 @@ $('file-backup').onchange=async e=>{const f=e.target.files[0];e.target.value='';
 async function restoreNow(){const d=restoreArmed;if(!d)return;
   pet=d.pet;mentIdx=d.mentIdx||0;sort=d.sort||'ageAsc';theme=d.theme||clone(DEFAULT_THEME);elements=d.elements||[];myStickers=d.myStickers||[];savedPals=d.savedPals||[];
   for(const [k,v] of Object.entries({pet,mentIdx,sort,theme,elements,myStickers,savedPals}))await store.set(k,v);
-  photos.forEach(dropUrls);await store.clearPhotos();photos=[];$('db-load').disabled=true;$('db-load').textContent='불러오는 중…';
-  for(const q of d.photos||[]){try{const bl=q.src?await makePhotoBlobs(q.src):{full:q.full,thumb:q.thumb};const p={id:q.id,date:q.date,added:q.added,memo:q.memo||'',...bl};await store.putPhoto(p);photos.push(p)}catch(_){}}
+  if(d.trialStart&&(!trialStart||d.trialStart<trialStart)){trialStart=d.trialStart;await store.set('trialStart',trialStart);paintPro()}
+  for(const p of photos){dropUrls(p);await store.delPhoto(p.id)}photos=[];$('db-load').disabled=true;$('db-load').textContent='불러오는 중…';
+  for(const q of d.photos||[]){try{const bl=q.src?await makePhotoBlobs(q.src):{full:q.full,thumb:q.thumb};const p={id:q.id,pet:CUR,date:q.date,added:q.added,memo:q.memo||'',...bl};await store.putPhoto(p);photos.push(p)}catch(_){}}
   $('db-load').disabled=false;
   restoreArmed=null;$('db-load').textContent='백업 불러오기 ↑';$('db-load').onclick=pickBackup;closeD('d-backup');go('home');toast('백업을 불러왔어요')}
 
@@ -1274,7 +1496,7 @@ async function renderWallpaper(outW){
   const L=R(box.querySelector('.layer'));
   for(const e of elements){x.save();x.translate(L.x+e.x,L.y+e.y);x.rotate((e.rot||0)*Math.PI/180);x.scale(e.scale||1,e.scale||1);
     if(e.type==='sticker'){x.translate(-20,-20);x.scale(2,2);x.fillStyle=e.color;x.fill(new Path2D(STK[e.key].d),'evenodd')}
-    else if(e.type==='image'){const im=await loadImg(e.src),h=80*im.height/im.width;x.drawImage(im,-40,-h/2,80,h)}
+    else if(e.type==='image'){const im=await loadImg(e.src),W=e.w||80,h=W*im.height/im.width;x.drawImage(im,-W/2,-h/2,W,h)}
     else{x.font=`${e.italic?'italic':'normal'} ${e.bold?700:400} ${e.size}px '${e.font}',sans-serif`;x.fillStyle=e.color;x.textBaseline='middle';
       const lines=e.text.split('\n'),lh=e.size*(e.lh||130)/100;if('letterSpacing'in x)x.letterSpacing=(e.ls||0)+'px';
       const wmax=Math.max(...lines.map(l=>x.measureText(l).width));x.textAlign=e.align||'center';const ax=e.align==='left'?-wmax/2:e.align==='right'?wmax/2:0;
@@ -1290,11 +1512,11 @@ try{const v=parseInt(localStorage.getItem('wallShift'));if(v>=-20&&v<=20)$('w-sh
 let shiftT;$('w-shift').addEventListener('input',()=>{showShift();try{localStorage.setItem('wallShift',wallShift())}catch(_){}clearTimeout(shiftT);shiftT=setTimeout(updateWallPreview,120)});
 function openWall(){$('w-set').classList.toggle('hidden',!plug('Naesaekki'));$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
 ['w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
-$('w-set').onclick=()=>openD('d-setwall');
+$('w-set').onclick=()=>{if(needPro('배경화면 바로 지정'))openD('d-setwall')};
 $('d-setwall').addEventListener('click',async e=>{const b=e.target.closest('[data-wall]');if(!b)return;const NS=plug('Naesaekki');if(!NS)return;
   closeD('d-setwall');const btn=$('w-set');btn.disabled=true;btn.textContent='지정하는 중…';
   try{const c=await renderWallpaper(1080);await NS.setWallpaper({data:c.toDataURL('image/png').split(',')[1],which:b.dataset.wall});
-    toast({lock:'잠금화면',home:'홈 화면',both:'홈·잠금화면'}[b.dataset.wall]+' 배경화면으로 지정했어요')}
+    bump('wall');toast({lock:'잠금화면',home:'홈 화면',both:'홈·잠금화면'}[b.dataset.wall]+' 배경화면으로 지정했어요')}
   catch(err){console.warn(err);toast('배경화면을 지정하지 못했어요')}
   finally{btn.disabled=false;btn.textContent='배경화면으로 바로 지정'}});
 $('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textContent='저장하는 중…';
@@ -1311,13 +1533,18 @@ $('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textCo
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>go(t.dataset.tab));
 const addPhotos=()=>openD('d-addpick');
 $('a-add').onclick=addPhotos;$('a-empty-add').onclick=addPhotos;
-$('dap-photos').onclick=()=>{closeD('d-addpick');$('file-album').click()};
+// 앱에서는 휴대폰 갤러리를 바로 열어서 고르기 (원본 그대로 읽어서 촬영 날짜도 정확)
+const nativeItems=(NS,list)=>list.map(f=>({get:async()=>{const d=(await NS.readFile({uri:f.uri})).data;return new File([dataURLtoBlob(`data:${f.mime};base64,${d}`)],f.name,{type:f.mime,lastModified:f.modified||Date.now()})}}));
+$('dap-photos').onclick=async()=>{closeD('d-addpick');const NS=plug('Naesaekki');
+  if(!NS){$('file-album').click();return}
+  let list;try{list=(await NS.pickImages()).files||[]}catch(e){if(!/cancel/i.test(String(e&&(e.code||e.message))))$('file-album').click();return}
+  if(list.length)await ingest(nativeItems(NS,list))};
 $('dap-folder').onclick=async()=>{closeD('d-addpick');const NS=plug('Naesaekki');
   if(!NS){$('file-folder').click();return}
   let list;try{list=(await NS.pickFolder()).files||[]}catch(e){return}
   if(!list.length){toast('이 폴더에는 사진이 없어요');return}
   // 폴더 안 사진은 한 장씩 읽어서 담기 (메모리 아끼기)
-  await ingest(list.map(f=>({get:async()=>{const d=(await NS.readFile({uri:f.uri})).data;return new File([dataURLtoBlob(`data:${f.mime};base64,${d}`)],f.name,{type:f.mime,lastModified:f.modified||Date.now()})}})))};
+  await ingest(nativeItems(NS,list))};
 $('file-album').onchange=e=>{const files=[...e.target.files];e.target.value='';ingest(files.map(f=>({get:async()=>f})))};
 $('file-folder').onchange=e=>{const files=[...e.target.files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|heic|gif)$/i.test(f.name));e.target.value='';
   if(!files.length){toast('이 폴더에는 사진이 없어요');return}ingest(files.map(f=>({get:async()=>f})))};
@@ -1334,7 +1561,7 @@ async function ingest(items){if(!items.length)return;let n=0,i=0,dup=0;
     const fh=await sha(await bl.full.arrayBuffer());if(seen.has(fh)){dup++;seen.add(sh);continue}
     seen.add(sh);seen.add(fh);
     const date=ex||ymd(new Date(f.lastModified||Date.now()));
-    const p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),...bl,sh,fh,date:date<pet.birth?pet.birth:date,added:Date.now()};
+    const p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),pet:CUR,...bl,sh,fh,date:date<pet.birth?pet.birth:date,added:Date.now()};
     await store.putPhoto(p);photos.push(p);n++}catch(_){}}
   filter='all';renderAlbum();
   toast(n?`${n}장의 추억을 담았어요${dup?` · 중복 ${dup}장은 건너뛰었어요`:''}`:dup?`이미 있는 사진이라 건너뛰었어요 (${dup}장)`:'사진을 추가하지 못했어요')}
@@ -1366,7 +1593,7 @@ async function pickNoPet(){if(!photos.length){toast('사진첩에 사진이 없�
     if(i%20===0)await new Promise(r=>setTimeout(r,0))}
   const miss=photos.filter(p=>p.ai&&!(dog?(p.ai.d>=.15||p.ai.dt):(p.ai.c>=.15||p.ai.ct)));
   if(!miss.length){toast(`모든 사진에 ${who}가 있어요`);return}
-  filter='all';editing=true;selected=new Set(miss.map(p=>p.id));go('album');renderAlbum();
+  bump('clean',miss.length);filter='all';editing=true;selected=new Set(miss.map(p=>p.id));go('album');renderAlbum();
   toast(`${who}가 안 보이는 사진 ${miss.length}장을 골라 뒀어요. 확인하고 삭제를 눌러 주세요`)}
 async function removeDupes(){if(!photos.length){toast('사진첩에 사진이 없어요');return}
   await ensureHashes();const keep=new Map(),drop=[];
@@ -1374,7 +1601,7 @@ async function removeDupes(){if(!photos.length){toast('사진첩에 사진이 �
   if(!drop.length){toast('중복된 사진이 없어요');return}
   for(const p of drop){dropUrls(p);await store.delPhoto(p.id)}const ids=new Set(drop.map(p=>p.id));photos=photos.filter(p=>!ids.has(p.id));
   for(const k of keep.values())if(k.memo)await store.putPhoto(k);
-  renderAlbum();toast(`중복 사진 ${drop.length}장을 지웠어요`)}
+  bump('clean',drop.length);renderAlbum();toast(`중복 사진 ${drop.length}장을 지웠어요`)}
 // 앱에 담긴 사진을 휴대폰 사진 앱으로 다시 저장 (최대 1600px)
 async function savePhotos(list){const NS=plug('Naesaekki');let ok=0;
   for(const [k,p] of list.entries()){if(list.length>3&&k%5===0)toast(`${list.length}장 중 ${k+1}장째 저장 중…`);
@@ -1414,7 +1641,8 @@ function dsEnd(e){if(!DS.st||e.pointerId!==DS.st.pid)return;if(DS.on){DS.after=t
 ['pointerup','pointercancel'].forEach(t=>$('a-grid').addEventListener(t,dsEnd));
 $('a-grid').onclick=e=>{const c=e.target.closest('.cell');if(!c)return;const id=c.dataset.id;
   if(editing){if(DS.after)return;selected.has(id)?selected.delete(id):selected.add(id);paintSel();return}
-  openPhoto=photos.find(p=>p.id===id);
+  openPhotoDlg(photos.find(p=>p.id===id))};
+function openPhotoDlg(ph){openPhoto=ph;
   $('dp-img').src=urlFor(openPhoto,'full');$('dp-date').value=openPhoto.date;$('dp-date').min=pet.birth;$('dp-date').max=ymd(today());
   $('dp-age').textContent=ageText(photoMonths(openPhoto),' 때');$('dp-memo').value=openPhoto.memo||'';openD('d-photo')};
 $('dp-date').oninput=()=>{const v=$('dp-date').value;if(v)$('dp-age').textContent=ageText(monthsBetween(parse(pet.birth),parse(v)),' 때')};
@@ -1485,6 +1713,48 @@ $('dr2-go').onclick=()=>{closeD('d-remind');$('db-note').classList.add('hidden')
 /* ---------- 샘플 데이터 모드 (#demo) — 메모리에서만 동작, 내 데이터는 건드리지 않음 ---------- */
 const DEMO=location.hash==='#demo';
 function enterDemo(){location.hash='demo';location.reload()}
+
+/* ---------- 평생 이용권: 첫 실행부터 30일 무료 체험, 이후 한 번 결제 ---------- */
+const PRO_ID='pro_lifetime',TRIAL_DAYS=30,PRO_DAY=864e5;
+let proOwned=false,trialStart=0;
+function trialLeft(){if(!trialStart)return TRIAL_DAYS;return Math.max(0,TRIAL_DAYS-Math.floor((Date.now()-trialStart)/PRO_DAY))}
+const isPro=()=>DEMO||proOwned||trialLeft()>0;
+function proCap(){return proOwned?'이용 중':trialLeft()>0?`무료 체험 ${trialLeft()}일 남음`:'5,900원'}
+function paintPro(){if($('set-pro-cap'))$('set-pro-cap').textContent=proCap()}
+function openPro(why){const NS=plug('Naesaekki');
+  $('pro-why').textContent=why?`‘${why}’${josaEun(why)} 평생 이용권으로 쓸 수 있어요.`:'';$('pro-why').classList.toggle('hidden',!why);
+  $('pro-status').textContent=proOwned?'평생 이용권을 쓰고 있어요. 고마워요!':trialLeft()>0?`무료 체험 중이에요 · ${trialLeft()}일 남았어요`:'무료 체험이 끝났어요. 만들어 둔 그림과 스티커는 그대로 남아 있어요.';
+  $('pro-buy').classList.toggle('hidden',proOwned||!NS);$('pro-price').classList.toggle('hidden',proOwned||!NS);$('pro-restore').classList.toggle('hidden',proOwned||!NS);
+  $('pro-note').textContent=NS?'결제는 구글 플레이로 안전하게 처리돼요. 폰을 바꿔도 같은 구글 계정이면 구매 복원으로 다시 열려요.':'구매는 안드로이드 앱에서 할 수 있어요.';
+  $('pro-usage').classList.add('hidden');if(!proOwned&&trialLeft()===0)usageLine().then(t=>{if(t){$('pro-usage').textContent=t;$('pro-usage').classList.remove('hidden')}});
+  openD('d-pro');
+  if(NS&&!proOwned)NS.billingProduct({id:PRO_ID}).then(r=>{if(r&&r.price)$('pro-buy').textContent=`${r.price} · 한 번 결제로 평생`}).catch(()=>{})}
+async function bump(k,n=1){if(proOwned||DEMO)return;const u=await store.get('usage')||{};u[k]=(u[k]||0)+n;await store.set('usage',u)}
+async function usageLine(){const u=await store.get('usage')||{},a=[];
+  if(u.draw)a.push(`그림 ${u.draw}개를 그렸고`);if(u.stk)a.push(`내 스티커 ${u.stk}개를 만들었고`);
+  if(u.clean)a.push(`사진 ${u.clean.toLocaleString('ko-KR')}장을 정리했고`);if(u.wall)a.push(`배경화면을 ${u.wall}번 바꿨어요`);
+  if(!a.length)return '';let t='체험 동안 '+a.join(', ');return t.endsWith('고')?t.slice(0,-1)+'어요.':t+'.'}
+const josaEun=w=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?'은':'는'};
+function needPro(why){if(isPro())return true;openPro(why);return false}
+async function setOwned(v){proOwned=!!v;await store.set('proOwned',proOwned);paintPro();pushWidget()}
+$('pro-buy').onclick=async()=>{const NS=plug('Naesaekki');if(!NS)return;const b=$('pro-buy');b.disabled=true;
+  try{const r=await NS.billingBuy({id:PRO_ID});
+    if(r.state==='purchased'){await setOwned(true);closeD('d-pro');toast('평생 이용권이 열렸어요. 고마워요!')}
+    else if(r.state==='pending')toast('결제가 확인되면 자동으로 열려요')}
+  catch(e){const c=String(e&&(e.code||e.message));if(!/CANCEL/i.test(c))toast(/NO_PRODUCT|UNAVAILABLE/.test(c)?'지금은 구매할 수 없어요. 잠시 뒤에 다시 해 주세요':'결제하지 못했어요')}
+  finally{b.disabled=false}};
+$('pro-restore').onclick=async()=>{const NS=plug('Naesaekki');if(!NS)return;
+  try{const r=await NS.billingRestore({id:PRO_ID});if(r.owned){await setOwned(true);closeD('d-pro');toast('평생 이용권을 복원했어요')}else toast(r.pending?'결제 확인 중이에요. 잠시 뒤에 다시 해 주세요':'이 구글 계정에는 구매 기록이 없어요')}
+  catch(e){toast('구매 기록을 확인하지 못했어요')}};
+async function initPro(){if(DEMO)return;
+  trialStart=await store.get('trialStart')||0;if(!trialStart){trialStart=Date.now();await store.set('trialStart',trialStart)}
+  proOwned=!!(await store.get('proOwned'));paintPro();
+  const NS=plug('Naesaekki');
+  if(NS)NS.billingRestore({id:PRO_ID}).then(r=>{if(r.owned!==proOwned&&!r.pending)setOwned(r.owned)}).catch(()=>{});
+  // 체험 끝나기 3일 전부터 하루 한 번, 끝난 날 한 번 알려 주기
+  if(proOwned)return;const left=trialLeft(),today=ymd(new Date()),last=await store.get('trialNote');
+  if(left>0&&left<=3&&last!==today){await store.set('trialNote',today);setTimeout(()=>toast(`평생 이용권 무료 체험이 ${left}일 남았어요`),2500)}
+  else if(left===0&&last!=='ended'){await store.set('trialNote','ended');setTimeout(()=>openPro(),2500)}}
 $('drs-go').onclick=async()=>{$('drs-go').disabled=true;await store.clearPhotos();mem.kv={};if(db)try{await tx('kv','readwrite',s=>s.clear())}catch(_){}
   try{localStorage.clear()}catch(_){}location.hash='';location.reload()};
 $('demo-exit').onclick=()=>{history.replaceState(null,'',location.pathname+location.search);location.reload()};
@@ -1499,12 +1769,15 @@ async function loadDemo(){
   if(DEMO){$('demo-bar').classList.remove('hidden');
     try{await loadDemo();go('home');toast('샘플 데이터를 불러왔어요')}catch(e){console.warn(e);toast('샘플 데이터를 불러오지 못했어요')}return}
   await openDB();
+  CUR=await store.get('curPet')||'p1';pets=await store.get('pets')||[];
   pet=await store.get('pet')||null;mentIdx=await store.get('mentIdx')||0;sort=await store.get('sort')||'ageAsc';
   theme=await store.get('theme')||clone(DEFAULT_THEME);elements=await store.get('elements')||[];myStickers=await store.get('myStickers')||[];savedPals=await store.get('savedPals')||[];
-  photos=await store.photos()||[];
+  photos=(await store.photos()||[]).filter(p=>(p.pet||'p1')===CUR);
+  if(pet&&!pets.some(x=>x.id===CUR)){pets.push({id:CUR,name:pet.name});await store.set('pets',pets)}
   for(const p of photos)if(p.src&&!(p.full instanceof Blob)){try{Object.assign(p,await makePhotoBlobs(p.src));delete p.src;await store.putPhoto(p)}catch(_){}}
+  await initPro();
   if(canInstall())$('set-install').classList.remove('hidden');
-  if(pet){go('home');setTimeout(nudge,1200)}else{applyGlobal(theme);openPet(true)}
+  if(pet){go('home');setTimeout(nudge,1200)}else{applyGlobal(theme);openPet(true);if(pets.length)toast('새로 함께할 아이를 소개해 주세요')}
   try{if(!NATIVE&&'serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 })();
