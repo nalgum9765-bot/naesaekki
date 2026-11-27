@@ -138,7 +138,10 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .cell.sel .ph{outline:3px solid var(--ink);outline-offset:-3px}
 .empty{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;min-height:300px}
 .empty div{display:flex;flex-direction:column;align-items:center;gap:4px}
-.editbar{display:none;gap:12px;padding:0 24px 12px}
+.editbar{display:none;gap:8px;padding:0 24px 12px}
+.editbar .btn{flex:1;min-width:0;padding:0 4px;font-size:13px}
+.editing .grid{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.set-row.danger span:first-child{color:var(--danger)}
 .editing .editbar{display:flex}
 
 /* ---------- 설정 ---------- */
@@ -326,6 +329,8 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     </div>
     <div class="editbar">
       <button class="btn" id="a-edit-cancel">취소</button>
+      <button class="btn" id="a-edit-all">전체 선택</button>
+      <button class="btn" id="a-edit-save">저장</button>
       <button class="btn danger" id="a-edit-del">삭제</button>
     </div>
   </section>
@@ -340,7 +345,10 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
       <button class="set-row" data-set="wall"><span>배경화면으로 저장</span><span class="cap">홈·잠금화면</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="backup"><span>백업</span><span data-icon="chevron"></span></button>
       <button class="set-row hidden" data-set="install" id="set-install"><span>홈 화면에 앱으로 추가</span><span class="cap">더 안전하게 보관</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="nopet"><span id="set-nopet-t">고양이 없는 사진 고르기</span><span class="cap">골라 두면 확인하고 지워요</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="dupes"><span>중복 사진 지우기</span><span class="cap">똑같은 사진은 한 장만</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="request"><span>개발자에게 요청하기</span><span data-icon="chevron"></span></button>
+      <button class="set-row danger" data-set="reset"><span>모든 기록 지우기</span><span class="cap">처음 상태로</span><span data-icon="chevron"></span></button>
     </div>
     <button class="set-foot" data-set="privacy" id="set-privacy">개인정보처리방침</button>
   </section>
@@ -433,6 +441,14 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   </div>
 </div>
 
+<div class="dim" id="d-reset" role="dialog" aria-modal="true" aria-labelledby="drs-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="drs-t">모든 기록을 지울까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <p class="body12">사진첩, 내 새끼 정보, 홈 꾸미기까지 모두 지워지고 처음 화면으로 돌아가요. 지운 기록은 되돌릴 수 없어요. 필요하면 먼저 백업해 두세요.</p>
+    <div class="row2"><button class="btn" data-close>취소</button><button class="btn danger" id="drs-go">모두 지우기</button></div>
+  </div>
+</div>
+
 <!-- H03 · 사람 나이 안내 -->
 <div class="dim" id="d-human" role="dialog" aria-modal="true" aria-labelledby="dh-t">
   <div class="dialog">
@@ -475,6 +491,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="field center"><label for="dp-date" style="font-size:13px;font-weight:700">촬영 날짜</label><input class="input" type="date" id="dp-date"></div>
     <div class="field"><label for="dp-memo">메모</label><textarea class="input" id="dp-memo" maxlength="300" placeholder="이날 있었던 일을 적어 두세요"></textarea></div>
     <button class="btn" id="dp-save">수정 완료</button>
+    <button class="btn" id="dp-dl">휴대폰에 사진 저장</button>
     <button class="btn ghost danger" id="dp-del">사진 삭제</button>
   </div>
 </div>
@@ -844,7 +861,7 @@ function renderAlbum(){
   $('a-empty').classList.toggle('hidden',!none);$('a-grid').classList.toggle('hidden',none);
   $('a-empty').querySelector('p').textContent=photos.length?`${chips.find(c=>c[0]===filter)[1]} 사진이 아직 없어요.`:'아직 사진이 없어요.';
   $('v-album').classList.toggle('editing',editing);$('a-edit').textContent=editing?'완료':'편집';
-  $('a-edit-del').textContent=selected.size?`${selected.size}장 삭제`:'삭제';
+  paintSel();
 }
 
 /* ---------- 화면 전환 ---------- */
@@ -855,7 +872,7 @@ function applyGlobal(t){const r=document.documentElement.style;
   r.setProperty('--chip-on',`color-mix(in srgb,${t.point} 45%,#fff)`);
   applyTheme(document.documentElement,t);
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t.bg}
-function go(t){
+function go(t){if(pet&&$('set-nopet-t'))$('set-nopet-t').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;
   tab=t;$('app').classList.toggle('customizing',t==='custom');
   document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   ['home','album','settings','custom'].forEach(v=>$('v-'+v).classList.toggle('on',v===t));
@@ -1104,6 +1121,7 @@ stageEl.addEventListener('pointerdown',e=>{
   if(!n){if(ptrs.size===0){const a=e.target.closest('[data-act]');draft.sel=-1;
       if(a&&a.dataset.act==='ment'){openMent('draft')}
       else if(a&&a.dataset.act==='photo'){toast('사진은 설정 › 내 새끼 사진 바꾸기에서 바꿀 수 있어요')}
+      else drawer.classList.add('collapsed'); // 빈 곳을 누르면 아래 창을 접어서 화면 아래쪽도 꾸밀 수 있게
       renderCustom()}
     else if(draft.sel>=0){ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});startGesture()}return}
   e.preventDefault();const i=+n.dataset.i;
@@ -1163,7 +1181,7 @@ $('dc-apply').onclick=()=>{closeD('d-color');colorCb&&colorCb(hsv2hex(hsv))};
 $('set-privacy').onclick=()=>openPrivacy();
 document.querySelector('.set-list').onclick=e=>{const b=e.target.closest('[data-set]');if(!b)return;const k=b.dataset.set;
   if(k==='pet')openPet(false);else if(k==='photo')changePhoto();else if(k==='custom')openCustom();
-  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}};
+  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='reset')openD('d-reset');else if(k==='dupes')removeDupes();else if(k==='nopet')pickNoPet()};
 
 /* S02 백업 */
 function download(blob,name){try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);return true}catch(e){return false}}
@@ -1268,25 +1286,100 @@ $('dap-folder').onclick=async()=>{closeD('d-addpick');const NS=plug('Naesaekki')
 $('file-album').onchange=e=>{const files=[...e.target.files];e.target.value='';ingest(files.map(f=>({get:async()=>f})))};
 $('file-folder').onchange=e=>{const files=[...e.target.files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|heic|gif)$/i.test(f.name));e.target.value='';
   if(!files.length){toast('이 폴더에는 사진이 없어요');return}ingest(files.map(f=>({get:async()=>f})))};
-async function ingest(items){if(!items.length)return;let n=0,i=0;
-  for(const it of items){i++;if(items.length>3&&(i===1||i%5===0))toast(`${items.length}장 중 ${i}장째 담는 중…`);
-    try{const f=await it.get(),[bl,ex]=await Promise.all([makePhotoBlobs(f),exifDate(f)]);
+// 똑같은 사진 알아보기: 원본 파일(sh)과 앱에 담긴 사진(fh)의 지문(SHA-256)을 비교
+async function sha(buf){const h=new Uint8Array(await crypto.subtle.digest('SHA-256',buf));let o='';for(let k=0;k<12;k++)o+=h[k].toString(16).padStart(2,'0');return o}
+async function ensureHashes(){let i=0;const need=photos.filter(p=>!p.fh&&p.full instanceof Blob);
+  for(const p of need){i++;if(need.length>20&&(i===1||i%50===0))toast(`사진 확인 중… ${i}/${need.length}`);try{p.fh=await sha(await p.full.arrayBuffer());await store.putPhoto(p)}catch(_){}}}
+async function ingest(items){if(!items.length)return;let n=0,i=0,dup=0;
+  await ensureHashes();const seen=new Set();photos.forEach(p=>{if(p.sh)seen.add(p.sh);if(p.fh)seen.add(p.fh)});
+  for(const it of items){i++;if(items.length>3&&(i===1||i%5===0))toast(`${items.length}장 중 ${i}장째 담는 중…${dup?` (중복 ${dup}장 건너뜀)`:''}`);
+    try{const f=await it.get();if(f.type&&!/^image\//.test(f.type))continue; // 동영상 등은 넣지 않음
+    const sh=await sha(await f.arrayBuffer());if(seen.has(sh)){dup++;continue}
+    const [bl,ex]=await Promise.all([makePhotoBlobs(f),exifDate(f)]);
+    const fh=await sha(await bl.full.arrayBuffer());if(seen.has(fh)){dup++;seen.add(sh);continue}
+    seen.add(sh);seen.add(fh);
     const date=ex||ymd(new Date(f.lastModified||Date.now()));
-    const p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),...bl,date:date<pet.birth?pet.birth:date,added:Date.now()};
+    const p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),...bl,sh,fh,date:date<pet.birth?pet.birth:date,added:Date.now()};
     await store.putPhoto(p);photos.push(p);n++}catch(_){}}
-  filter='all';renderAlbum();toast(n?`${n}장의 추억을 담았어요`:'사진을 추가하지 못했어요')}
+  filter='all';renderAlbum();
+  toast(n?`${n}장의 추억을 담았어요${dup?` · 중복 ${dup}장은 건너뛰었어요`:''}`:dup?`이미 있는 사진이라 건너뛰었어요 (${dup}장)`:'사진을 추가하지 못했어요')}
+// 내 새끼가 없는 사진 고르기: 폰 안에서 MobileNetV2(이미지넷)로 고양이·강아지가 있는지 확인
+let clsSess=null;
+async function getCls(){if(clsSess)return clsSess;
+  if(!window.ort)await loadScript('ort/ort.wasm.min.js');
+  ort.env.wasm.numThreads=1;ort.env.wasm.wasmPaths=new URL('ort/',location.href).href;
+  const b64=await (await fetch(new URL('models/mobilenetv2.onnx.b64.txt',location.href))).text(),bin=atob(b64.trim()),buf=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)buf[i]=bin.charCodeAt(i);
+  clsSess=await ort.InferenceSession.create(buf,{executionProviders:['wasm']});return clsSess}
+const CLS_N=224,clsCv=document.createElement('canvas');clsCv.width=clsCv.height=CLS_N;
+async function petScores(p){const sess=await getCls(),x=clsCv.getContext('2d',{willReadFrequently:true});
+  const bm=await createImageBitmap(p.thumb instanceof Blob?p.thumb:p.full);x.drawImage(bm,0,0,CLS_N,CLS_N);bm.close&&bm.close();
+  const px=x.getImageData(0,0,CLS_N,CLS_N).data,N=CLS_N*CLS_N,inp=new Float32Array(3*N),mean=[.485,.456,.406],std=[.229,.224,.225];
+  for(let i=0;i<N;i++)for(let c=0;c<3;c++)inp[c*N+i]=(px[i*4+c]/255-mean[c])/std[c];
+  const out=await sess.run({[sess.inputNames[0]]:new ort.Tensor('float32',inp,[1,3,CLS_N,CLS_N])}),z=out[sess.outputNames[0]].data;
+  let mx=-Infinity;for(const v of z)if(v>mx)mx=v;let sum=0;const e=new Float32Array(z.length);for(let i=0;i<z.length;i++){e[i]=Math.exp(z[i]-mx);sum+=e[i]}
+  let cat=0,dog=0;for(let i=281;i<=287;i++)cat+=e[i]/sum;for(let i=151;i<=268;i++)dog+=e[i]/sum;
+  const top=[...e.keys()].sort((a,b)=>e[b]-e[a]).slice(0,5);
+  return {c:+cat.toFixed(3),d:+dog.toFixed(3),ct:top.some(i=>i>=281&&i<=287),dt:top.some(i=>i>=151&&i<=268)}}
+async function pickNoPet(){if(!photos.length){toast('사진첩에 사진이 없어요');return}
+  const dog=pet.kind==='dog',who=dog?'강아지':'고양이';
+  toast('사진 알아보는 도구 준비 중…');
+  try{await getCls()}catch(e){console.warn(e);toast('사진 알아보는 도구를 열지 못했어요');return}
+  const todo=photos.filter(p=>!p.ai);let i=0;
+  for(const p of todo){i++;if(i===1||i%10===0)toast(`${who}가 있는지 보는 중… ${i}/${todo.length}`);
+    try{p.ai=await petScores(p);await store.putPhoto(p)}catch(e){console.warn(e)}
+    if(i%20===0)await new Promise(r=>setTimeout(r,0))}
+  const miss=photos.filter(p=>p.ai&&!(dog?(p.ai.d>=.15||p.ai.dt):(p.ai.c>=.15||p.ai.ct)));
+  if(!miss.length){toast(`모든 사진에 ${who}가 있어요`);return}
+  filter='all';editing=true;selected=new Set(miss.map(p=>p.id));go('album');renderAlbum();
+  toast(`${who}가 안 보이는 사진 ${miss.length}장을 골라 뒀어요. 확인하고 삭제를 눌러 주세요`)}
+async function removeDupes(){if(!photos.length){toast('사진첩에 사진이 없어요');return}
+  await ensureHashes();const keep=new Map(),drop=[];
+  for(const p of [...photos].sort((a,b)=>a.added-b.added)){if(!p.fh)continue;if(keep.has(p.fh)){const k=keep.get(p.fh);if(!k.memo&&p.memo)k.memo=p.memo;drop.push(p)}else keep.set(p.fh,p)}
+  if(!drop.length){toast('중복된 사진이 없어요');return}
+  for(const p of drop){dropUrls(p);await store.delPhoto(p.id)}const ids=new Set(drop.map(p=>p.id));photos=photos.filter(p=>!ids.has(p.id));
+  for(const k of keep.values())if(k.memo)await store.putPhoto(k);
+  renderAlbum();toast(`중복 사진 ${drop.length}장을 지웠어요`)}
+// 앱에 담긴 사진을 휴대폰 사진 앱으로 다시 저장 (최대 1600px)
+async function savePhotos(list){const NS=plug('Naesaekki');let ok=0;
+  for(const [k,p] of list.entries()){if(list.length>3&&k%5===0)toast(`${list.length}장 중 ${k+1}장째 저장 중…`);
+    const name=`naesaekki-${p.date}-${p.id}.jpg`;
+    try{if(NS){await NS.saveImage({data:(await blobToDataURL(p.full)).split(',')[1],name,mime:'image/jpeg'});ok++}
+      else if(list.length===1){await shareOrDownload(p.full,name);ok++}
+      else if(download(p.full,name)){ok++;await new Promise(r=>setTimeout(r,250))}}catch(e){console.warn(e)}}
+  toast(ok?(NS?`사진 앱의 ‘내새끼’ 앨범에 ${ok}장 저장했어요`:`${ok}장 저장했어요`):'저장하지 못했어요')}
 $('a-chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;filter=c.dataset.f;renderAlbum()};
 $('a-sort').onclick=()=>{$('ds-list').innerHTML=SORTS.map(([v,l])=>`<button class="radio" data-s="${v}" role="radio" aria-checked="${sort===v}">${icon(sort===v?'radioOn':'radioOff')}${l}</button>`).join('');openD('d-sort')};
 $('ds-list').onclick=async e=>{const r=e.target.closest('[data-s]');if(!r)return;sort=r.dataset.s;await store.set('sort',sort);closeD('d-sort');renderAlbum()};
 $('a-edit').onclick=()=>{editing=!editing;selected.clear();renderAlbum()};
 $('a-edit-cancel').onclick=()=>{editing=false;selected.clear();renderAlbum()};
-let bulkArmed=false;
+function paintSel(){$('a-grid').querySelectorAll('.cell').forEach(c=>c.classList.toggle('sel',selected.has(c.dataset.id)));
+  $('a-edit-del').textContent=selected.size?`${selected.size}장 삭제`:'삭제';
+  const all=[...$('a-grid').querySelectorAll('.cell')];$('a-edit-all').textContent=all.length&&all.every(c=>selected.has(c.dataset.id))?'선택 해제':'전체 선택'}
 $('a-edit-del').onclick=async()=>{if(!selected.size){toast('지울 사진을 골라 주세요');return}
-  if(!bulkArmed){bulkArmed=true;$('a-edit-del').textContent='한 번 더 누르면 삭제돼요';setTimeout(()=>{bulkArmed=false;renderAlbum()},2500);return}
-  bulkArmed=false;for(const id of selected){const p=photos.find(x=>x.id===id);if(p)dropUrls(p);await store.delPhoto(id)}const n=selected.size;photos=photos.filter(p=>!selected.has(p.id));selected.clear();editing=false;renderAlbum();toast(`${n}장을 지웠어요`)};
+  for(const id of selected){const p=photos.find(x=>x.id===id);if(p)dropUrls(p);await store.delPhoto(id)}const n=selected.size;photos=photos.filter(p=>!selected.has(p.id));selected.clear();editing=false;renderAlbum();toast(`${n}장을 지웠어요`)};
+$('a-edit-all').onclick=()=>{const ids=[...$('a-grid').querySelectorAll('.cell')].map(c=>c.dataset.id);
+  if(ids.every(id=>selected.has(id)))ids.forEach(id=>selected.delete(id));else ids.forEach(id=>selected.add(id));paintSel()};
+$('a-edit-save').onclick=()=>{if(!selected.size){toast('저장할 사진을 골라 주세요');return}savePhotos(photos.filter(p=>selected.has(p.id)))};
+// 편집 중 옆으로 쓱 밀면 지나간 사진들이 한꺼번에 선택돼요 (갤럭시처럼)
+const DS={st:null,on:false,raf:0,after:false};
+$('a-grid').addEventListener('pointerdown',e=>{if(!editing)return;const c=e.target.closest('.cell');if(!c)return;DS.st={x:e.clientX,y:e.clientY,id:c.dataset.id,pid:e.pointerId};DS.on=false});
+$('a-grid').addEventListener('pointermove',e=>{const st=DS.st;if(!st||e.pointerId!==st.pid)return;
+  if(!DS.on){const dx=Math.abs(e.clientX-st.x),dy=Math.abs(e.clientY-st.y);
+    if(dx>10&&dx>dy){DS.on=true;DS.cells=[...$('a-grid').querySelectorAll('.cell')];DS.i0=DS.cells.findIndex(c=>c.dataset.id===st.id);DS.mode=!selected.has(st.id);DS.base=new Set(selected);
+      try{$('a-grid').setPointerCapture(e.pointerId)}catch(_){}DS.raf=requestAnimationFrame(dsTick)}
+    else if(dy>10){DS.st=null;return}else return}
+  e.preventDefault();DS.x=e.clientX;DS.y=e.clientY;dsPick()});
+function dsPick(){const el=document.elementFromPoint(DS.x,DS.y),c=el&&el.closest('.cell');if(!c)return;const i1=DS.cells.indexOf(c);if(i1<0)return;
+  const a=Math.min(DS.i0,i1),b=Math.max(DS.i0,i1);selected=new Set(DS.base);for(let k=a;k<=b;k++){const id=DS.cells[k].dataset.id;DS.mode?selected.add(id):selected.delete(id)}paintSel()}
+function dsTick(){if(!DS.on)return;const r=$('a-body').getBoundingClientRect();let v=0;
+  if(DS.y<r.top+70)v=-Math.min(18,(r.top+70-DS.y)/3);else if(DS.y>r.bottom-70)v=Math.min(18,(DS.y-(r.bottom-70))/3);
+  if(v){$('a-body').scrollTop+=v;dsPick()}DS.raf=requestAnimationFrame(dsTick)}
+function dsEnd(e){if(!DS.st||e.pointerId!==DS.st.pid)return;if(DS.on){DS.after=true;setTimeout(()=>DS.after=false,50)}DS.st=null;DS.on=false;cancelAnimationFrame(DS.raf)}
+['pointerup','pointercancel'].forEach(t=>$('a-grid').addEventListener(t,dsEnd));
 $('a-grid').onclick=e=>{const c=e.target.closest('.cell');if(!c)return;const id=c.dataset.id;
-  if(editing){selected.has(id)?selected.delete(id):selected.add(id);renderAlbum();return}
-  openPhoto=photos.find(p=>p.id===id);delArmed=false;$('dp-del').textContent='사진 삭제';
+  if(editing){if(DS.after)return;selected.has(id)?selected.delete(id):selected.add(id);paintSel();return}
+  openPhoto=photos.find(p=>p.id===id);
   $('dp-img').src=urlFor(openPhoto,'full');$('dp-date').value=openPhoto.date;$('dp-date').min=pet.birth;$('dp-date').max=ymd(today());
   $('dp-age').textContent=ageText(photoMonths(openPhoto),' 때');$('dp-memo').value=openPhoto.memo||'';openD('d-photo')};
 $('dp-date').oninput=()=>{const v=$('dp-date').value;if(v)$('dp-age').textContent=ageText(monthsBetween(parse(pet.birth),parse(v)),' 때')};
@@ -1315,8 +1408,8 @@ function vEnd(e){if(!VW.ptrs.has(e.pointerId))return;VW.ptrs.delete(e.pointerId)
 ['pointerup','pointercancel'].forEach(t=>vw.addEventListener(t,vEnd));
 vw.addEventListener('wheel',e=>{e.preventDefault();VW.s=Math.max(1,Math.min(6,VW.s*(e.deltaY<0?1.15:1/1.15)));if(VW.s===1)VW.x=VW.y=0;vPaint()},{passive:false});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&vw.classList.contains('on')){e.stopImmediatePropagation();closeViewer()}},true);
-$('dp-del').onclick=async()=>{if(!delArmed){delArmed=true;$('dp-del').textContent='한 번 더 누르면 삭제돼요';return}
-  dropUrls(openPhoto);await store.delPhoto(openPhoto.id);photos=photos.filter(p=>p!==openPhoto);closeD('d-photo');renderAlbum();toast('사진을 지웠어요')};
+$('dp-dl').onclick=()=>savePhotos([openPhoto]);
+$('dp-del').onclick=async()=>{dropUrls(openPhoto);await store.delPhoto(openPhoto.id);photos=photos.filter(p=>p!==openPhoto);closeD('d-photo');renderAlbum();toast('사진을 지웠어요')};
 
 async function openPrivacy(){openD('d-privacy');if($('dpv-body').childElementCount)return;
   try{const t=await (await fetch(new URL('privacy.html',location.href))).text(),d=new DOMParser().parseFromString(t,'text/html');
@@ -1357,6 +1450,8 @@ $('dr2-go').onclick=()=>{closeD('d-remind');$('db-note').classList.add('hidden')
 /* ---------- 샘플 데이터 모드 (#demo) — 메모리에서만 동작, 내 데이터는 건드리지 않음 ---------- */
 const DEMO=location.hash==='#demo';
 function enterDemo(){location.hash='demo';location.reload()}
+$('drs-go').onclick=async()=>{$('drs-go').disabled=true;await store.clearPhotos();mem.kv={};if(db)try{await tx('kv','readwrite',s=>s.clear())}catch(_){}
+  try{localStorage.clear()}catch(_){}location.hash='';location.reload()};
 $('demo-exit').onclick=()=>{history.replaceState(null,'',location.pathname+location.search);location.reload()};
 async function loadDemo(){
   const d=await (await fetch(new URL('demo.json',location.href))).json();
