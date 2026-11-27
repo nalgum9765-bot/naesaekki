@@ -1,9 +1,12 @@
 package com.dogom.naesaekki;
 
+import android.app.WallpaperManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -130,6 +133,26 @@ public class NaesaekkiPlugin extends Plugin {
             call.resolve(r);
         } catch (Exception e) {
             call.reject("read failed", e);
+        }
+    }
+
+    /** 꾸민 화면을 바로 휴대폰 배경화면으로 지정 (which: home | lock | both) */
+    @PluginMethod
+    public void setWallpaper(PluginCall call) {
+        String data = call.getString("data");
+        String which = call.getString("which", "both");
+        if (data == null) { call.reject("no data"); return; }
+        try {
+            byte[] bytes = Base64.decode(data, Base64.DEFAULT);
+            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (bm == null) { call.reject("decode failed"); return; }
+            int flags = "home".equals(which) ? WallpaperManager.FLAG_SYSTEM
+                    : "lock".equals(which) ? WallpaperManager.FLAG_LOCK
+                    : (WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK);
+            WallpaperManager.getInstance(getContext()).setBitmap(bm, null, true, flags);
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("set failed", e);
         }
     }
 }

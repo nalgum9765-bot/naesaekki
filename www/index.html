@@ -163,10 +163,12 @@ select.input{padding-right:40px;background:var(--white) url("data:image/svg+xml,
 .stage{flex:1;position:relative;overflow:hidden;touch-action:none}
 .stage .hero-wrap{position:absolute;left:0;right:0;top:0;bottom:0}
 .stage .el{cursor:grab}
-.hist{position:absolute;right:16px;bottom:12px;display:flex;gap:8px;z-index:2}
+.hist{position:absolute;left:16px;right:16px;bottom:12px;display:flex;gap:8px;z-index:2;pointer-events:none}
+.hist>*{pointer-events:auto}
 .hist button{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--white);border:2px solid var(--t-ink);box-shadow:2px 2px 0 0 var(--t-ink)}
 .hist button:active{transform:translate(1px,1px);box-shadow:1px 1px 0 0 var(--t-ink)}
 .hist button:disabled{opacity:.35;box-shadow:none}
+.hist .c-reset{width:auto;padding:0 12px;font-size:12px;font-weight:700;color:var(--t-ink);margin-right:auto}
 .hist svg path{fill:var(--t-ink)}
 .stage .el.sel{outline:1px dashed var(--t-ink);outline-offset:4px}
 .drawer{flex:none;margin:0 16px calc(16px + env(safe-area-inset-bottom));background:var(--white);border:2px solid var(--t-ink);box-shadow:3px 3px 0 0 var(--t-ink);padding:12px 20px 20px;display:flex;flex-direction:column;gap:12px;color:var(--t-ink);--ink:var(--t-ink)}
@@ -340,15 +342,12 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="header"><h1 class="title">설정</h1></div>
     <div class="set-list">
       <button class="set-row" data-set="custom"><span style="font-weight:700">홈 꾸미기</span><span class="cap">색상·스티커·멘트</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="pet"><span>내 새끼 정보</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="photo"><span>내 새끼 사진 바꾸기</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="petmgr"><span>내 새끼 관리</span><span class="cap">정보·사진</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="wall"><span>배경화면으로 저장</span><span class="cap">홈·잠금화면</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="backup"><span>백업</span><span data-icon="chevron"></span></button>
       <button class="set-row hidden" data-set="install" id="set-install"><span>홈 화면에 앱으로 추가</span><span class="cap">더 안전하게 보관</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="nopet"><span id="set-nopet-t">고양이 없는 사진 고르기</span><span class="cap">골라 두면 확인하고 지워요</span><span data-icon="chevron"></span></button>
-      <button class="set-row" data-set="dupes"><span>중복 사진 지우기</span><span class="cap">똑같은 사진은 한 장만</span><span data-icon="chevron"></span></button>
+      <button class="set-row" data-set="albummgr"><span>사진첩 관리</span><span class="cap">정리·초기화</span><span data-icon="chevron"></span></button>
       <button class="set-row" data-set="request"><span>개발자에게 요청하기</span><span data-icon="chevron"></span></button>
-      <button class="set-row danger" data-set="reset"><span>모든 기록 지우기</span><span class="cap">처음 상태로</span><span data-icon="chevron"></span></button>
     </div>
     <button class="set-foot" data-set="privacy" id="set-privacy">개인정보처리방침</button>
   </section>
@@ -362,7 +361,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
       <p class="c-hint">바꾸고 싶은 것을 다 눌러보세요</p>
     </div>
     <div class="stage" id="c-stage"><div class="hero-wrap" id="c-wrap"></div>
-      <div class="hist"><button id="c-undo" aria-label="되돌리기" title="되돌리기" data-icon="undo"></button><button id="c-redo" aria-label="다시 실행" title="다시 실행" data-icon="redo"></button></div>
+      <div class="hist"><button id="c-reset" class="c-reset">초기화</button><button id="c-undo" aria-label="되돌리기" title="되돌리기" data-icon="undo"></button><button id="c-redo" aria-label="다시 실행" title="다시 실행" data-icon="redo"></button></div>
     </div>
     <div class="drawer" id="c-drawer">
       <div class="ctabs" role="tablist">
@@ -441,6 +440,30 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   </div>
 </div>
 
+<div class="dim" id="d-petmgr" role="dialog" aria-modal="true" aria-labelledby="dpm-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dpm-t">내 새끼 관리</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <button class="btn" id="dpm-info">내 새끼 정보 바꾸기</button>
+    <button class="btn" id="dpm-photo">내 새끼 사진 바꾸기</button>
+  </div>
+</div>
+<div class="dim" id="d-albummgr" role="dialog" aria-modal="true" aria-labelledby="dam-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dam-t">사진첩 관리</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <button class="btn" id="dam-nopet">고양이 없는 사진 고르기</button>
+    <button class="btn" id="dam-dupes">중복 사진 지우기</button>
+    <p class="cap">고른 사진은 바로 지우지 않아요. 사진첩에서 확인한 뒤 삭제를 눌러 주세요.</p>
+    <button class="btn ghost danger" id="dam-reset">모든 기록 지우기</button>
+  </div>
+</div>
+<div class="dim" id="d-setwall" role="dialog" aria-modal="true" aria-labelledby="dsw-t">
+  <div class="dialog">
+    <div class="dhead"><h2 id="dsw-t">어디에 지정할까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
+    <button class="btn" data-wall="lock">잠금화면</button>
+    <button class="btn" data-wall="home">홈 화면</button>
+    <button class="btn" data-wall="both">둘 다</button>
+  </div>
+</div>
 <div class="dim" id="d-reset" role="dialog" aria-modal="true" aria-labelledby="drs-t">
   <div class="dialog">
     <div class="dhead"><h2 id="drs-t">모든 기록을 지울까요?</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
@@ -645,6 +668,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="wp-prev"><img id="w-img" alt="배경화면 미리보기"></div>
     <p class="cap hidden" id="w-tip">저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.</p>
     <button class="btn" id="w-save">이미지 저장</button>
+    <button class="btn hidden" id="w-set">배경화면으로 바로 지정</button>
   </div>
 </div>
 
@@ -872,7 +896,7 @@ function applyGlobal(t){const r=document.documentElement.style;
   r.setProperty('--chip-on',`color-mix(in srgb,${t.point} 45%,#fff)`);
   applyTheme(document.documentElement,t);
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t.bg}
-function go(t){if(pet&&$('set-nopet-t'))$('set-nopet-t').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;
+function go(t){
   tab=t;$('app').classList.toggle('customizing',t==='custom');
   document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   ['home','album','settings','custom'].forEach(v=>$('v-'+v).classList.toggle('on',v===t));
@@ -1109,6 +1133,7 @@ $('c-rot').oninput=e=>{const el=selEl();if(!el)return;if(!sliding){pushHist();sl
 ['change','pointerup'].forEach(t=>{$('c-size').addEventListener(t,()=>sliding=false);$('c-rot').addEventListener(t,()=>sliding=false)});
 $('c-color').onclick=()=>{const el=selEl();if(!el||el.type==='image')return;openColor(el.color,c=>{pushHist();el.color=c;renderCustom()})};
 function restoreState(h){const s=JSON.parse(h);draft.theme=s.t;draft.els=s.e;if(s.m!==undefined)draft.ment=s.m;if(draft.sel>=draft.els.length)draft.sel=-1;renderCustom()}
+$('c-reset').onclick=()=>{pushHist();draft.theme=clone(DEFAULT_THEME);draft.els=[];draft.ment='';draft.sel=-1;textDraft=null;renderCustom();toast('처음 모습으로 돌렸어요 · 되돌리기로 취소할 수 있어요')};
 $('c-undo').onclick=()=>{const h=draft.hist.pop();if(!h)return;draft.redo.push(snapState());restoreState(h)};
 $('c-redo').onclick=()=>{const h=draft.redo.pop();if(!h)return;draft.hist.push(snapState());restoreState(h)};
 document.addEventListener('keydown',e=>{if(tab==='custom'&&(e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==='z'||e.key.toLowerCase()==='y')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.querySelector('.dim.on')){e.preventDefault();$((e.key.toLowerCase()==='y'||e.shiftKey)?'c-redo':'c-undo').click()}});
@@ -1118,6 +1143,7 @@ $('c-del').onclick=()=>{if(draft.sel<0)return;pushHist();draft.els.splice(draft.
 const ptrs=new Map();let gest=null;
 stageEl.addEventListener('pointerdown',e=>{
   const n=e.target.closest('.el');
+  if(e.target.closest('.hist'))return;
   if(!n){if(ptrs.size===0){const a=e.target.closest('[data-act]');draft.sel=-1;
       if(a&&a.dataset.act==='ment'){openMent('draft')}
       else if(a&&a.dataset.act==='photo'){toast('사진은 설정 › 내 새끼 사진 바꾸기에서 바꿀 수 있어요')}
@@ -1181,7 +1207,9 @@ $('dc-apply').onclick=()=>{closeD('d-color');colorCb&&colorCb(hsv2hex(hsv))};
 $('set-privacy').onclick=()=>openPrivacy();
 document.querySelector('.set-list').onclick=e=>{const b=e.target.closest('[data-set]');if(!b)return;const k=b.dataset.set;
   if(k==='pet')openPet(false);else if(k==='photo')changePhoto();else if(k==='custom')openCustom();
-  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='reset')openD('d-reset');else if(k==='dupes')removeDupes();else if(k==='nopet')pickNoPet()};
+  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='petmgr')openD('d-petmgr');else if(k==='albummgr'){$('dam-nopet').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;openD('d-albummgr')}};
+$('dpm-info').onclick=()=>{closeD('d-petmgr');openPet(false)};$('dpm-photo').onclick=()=>{closeD('d-petmgr');changePhoto()};
+$('dam-nopet').onclick=()=>{closeD('d-albummgr');pickNoPet()};$('dam-dupes').onclick=()=>{closeD('d-albummgr');removeDupes()};$('dam-reset').onclick=()=>{closeD('d-albummgr');openD('d-reset')};
 
 /* S02 백업 */
 function download(blob,name){try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);return true}catch(e){return false}}
@@ -1260,8 +1288,15 @@ function wallShift(){return +$('w-shift').value||0}
 function showShift(){const v=wallShift();$('w-shift-v').textContent=v===0?'홈 화면과 같게':v<0?`위로 ${-v}`:`아래로 ${v}`}
 try{const v=parseInt(localStorage.getItem('wallShift'));if(v>=-20&&v<=20)$('w-shift').value=v}catch(_){}showShift();
 let shiftT;$('w-shift').addEventListener('input',()=>{showShift();try{localStorage.setItem('wallShift',wallShift())}catch(_){}clearTimeout(shiftT);shiftT=setTimeout(updateWallPreview,120)});
-function openWall(){$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
+function openWall(){$('w-set').classList.toggle('hidden',!plug('Naesaekki'));$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
 ['w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
+$('w-set').onclick=()=>openD('d-setwall');
+$('d-setwall').addEventListener('click',async e=>{const b=e.target.closest('[data-wall]');if(!b)return;const NS=plug('Naesaekki');if(!NS)return;
+  closeD('d-setwall');const btn=$('w-set');btn.disabled=true;btn.textContent='지정하는 중…';
+  try{const c=await renderWallpaper(1080);await NS.setWallpaper({data:c.toDataURL('image/png').split(',')[1],which:b.dataset.wall});
+    toast({lock:'잠금화면',home:'홈 화면',both:'홈·잠금화면'}[b.dataset.wall]+' 배경화면으로 지정했어요')}
+  catch(err){console.warn(err);toast('배경화면을 지정하지 못했어요')}
+  finally{btn.disabled=false;btn.textContent='배경화면으로 바로 지정'}});
 $('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textContent='저장하는 중…';
   try{const c=await renderWallpaper(1080),url=c.toDataURL('image/png');$('w-img').src=url;
     const name=`naesaekki-${Date.now()}.png`;
