@@ -12,7 +12,7 @@
 <title>내새끼</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gowun+Dodum&family=Jua&family=Do+Hyeon&family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&family=Poor+Story&family=Single+Day&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gowun+Dodum&family=Jua&family=Do+Hyeon&family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Pen+Script&family=Bagel+Fat+One&family=Dongle:wght@400;700&family=Gowun+Batang:wght@400;700&family=Yeon+Sung&family=Cute+Font&display=swap" rel="stylesheet">
 <style>
 /* VOICE: 반려동물 기록 앱 — 다정하고 장난스러운 '주접' 톤
    IDEA: Figma '내새끼' 디자인 시스템 — 2px 잉크 테두리 + 3px 픽셀 그림자, 20px 픽셀 아이콘
@@ -488,7 +488,7 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <ul class="pro-list">
       <li>사진첩 정리: 고양이(강아지) 없는 사진 고르기, 중복 사진 지우기</li>
       <li>그리기: 손글씨, 직선·네모·동그라미, 도형 채우기</li>
-      <li>추가 글꼴 4종, 스티커 팩</li>
+      <li>추가 글꼴 5종, 스티커 팩</li>
       <li>내 스티커 무제한 (무료는 3개까지)</li>
       <li>성장 모아보기 저장, 홈 화면 위젯</li>
       <li>여러 마리 등록 (둘째부터)</li>
@@ -632,7 +632,8 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
     <div class="dhead"><h2 id="dpet-t">내 새끼 정보</h2><button type="button" class="iconbtn" data-close aria-label="닫기" data-icon="close" id="pet-x"></button></div>
     <div class="field"><label for="pf-name">이름</label><input class="input" id="pf-name" maxlength="12" required autocomplete="off" placeholder="예) 라쏘"></div>
     <div class="field"><label for="pf-birth">생일</label><input class="input" type="date" id="pf-birth" required></div>
-    <div class="field"><label for="pf-kind">종류</label><select class="input" id="pf-kind"><option value="cat">고양이</option><option value="dog">강아지</option></select></div>
+    <div class="field"><label for="pf-kind">종류</label><select class="input" id="pf-kind"><option value="cat">고양이</option><option value="dog">강아지</option><option value="etc">직접 입력</option></select></div>
+    <div class="field hidden" id="pf-etc-f"><label for="pf-etc">어떤 아이인가요?</label><input class="input" id="pf-etc" maxlength="10" autocomplete="off" placeholder="예) 토끼, 햄스터, 앵무새"></div>
     <div class="field" id="pf-size-f"><label for="pf-size">강아지 크기</label><select class="input" id="pf-size"><option value="s">소형견</option><option value="m">중형견</option><option value="l">대형견</option></select></div>
     <button type="button" class="btn" id="pf-photo">사진 고르기</button>
     <button type="submit" class="btn">저장</button>
@@ -872,7 +873,7 @@ const SORTS=[['ageAsc','나이 오름차순'],['ageDesc','나이 내림차순'],
 const PALETTES=[['로즈','#fff5fa','#292b30','#f5cdd8','#c8738b'],['블루','#e3edf7','#283847','#ffffff','#bcd2ea'],['버터','#fffaed','#40352b','#ffe0b3','#cc8953'],['올리브','#f2f5d4','#30382c','#ffffff','#8c9c43'],
   ['라벤더','#e8e4f2','#342f43','#ffffff','#9c82b8'],['세이지','#e2ede7','#293d35','#f8f6ef','#6b9680'],['모카','#eee5db','#40352e','#fffdf8','#b48365'],['피치','#f6e2db','#493431','#fff8f0','#c57970']];
 const DEFAULT_THEME={bg:'#fff6fb',ink:'#242620',bubble:'#ffffff',point:'#bcd2ea'};
-const FONTS=[['Noto Sans KR','노토 산스'],['Gowun Dodum','고운돋움'],['Jua','주아'],['Do Hyeon','도현'],['Black Han Sans','검은고딕'],['Gaegu','개구'],['Nanum Pen Script','나눔펜'],['Gamja Flower','감자꽃',1],['Hi Melody','하이멜로디',1],['Poor Story','푸어스토리',1],['Single Day','싱글데이',1]];
+const FONTS=[['Noto Sans KR','노토 산스'],['Gowun Dodum','고운돋움'],['Jua','주아'],['Do Hyeon','도현'],['Black Han Sans','검은고딕'],['Gaegu','개구'],['Nanum Pen Script','나눔펜'],['Bagel Fat One','베이글',1],['Dongle','동글',1],['Gowun Batang','고운바탕',1],['Yeon Sung','연성',1],['Cute Font','귀여운',1]];
 const COLORS=['#f4afb5','#f6c59f','#f7e5a0','#bbddb8','#afd2f2','#b6bedf','#d5b9e9','#ffffff','#e8e8e8','#b4b4b4','#818181','#424242','#000000'];
 
 /* ---------- 저장소: IndexedDB (안 되면 메모리) ---------- */
@@ -946,14 +947,14 @@ function elHTML(e,i){
 }
 function heroHTML(els,opt={}){
   const b=parse(pet.birth),t=today(),m=monthsBetween(b,t),days=Math.round((t-b)/864e5);
-  const ph=pet.photo?`<img src="${pet.photo}" alt="${esc(pet.name)} 사진">`:icon(pet.kind==='dog'?'dogFace':'catFace',64,'currentColor');
+  const ph=pet.photo?`<img src="${pet.photo}" alt="${esc(pet.name)} 사진">`:(pet.kind==='etc'?stkSVG('paw','currentColor',64):icon(pet.kind==='dog'?'dogFace':'catFace',64,'currentColor'));
   return `<div class="hero">
     <p class="pet-name">${esc(pet.name)}</p><p class="muted">${dot(pet.birth)}</p>
     <div class="hero-main">
       ${opt.noMent?'':`<button class="ment" data-act="ment">${esc(opt.ment!==undefined?(opt.ment||MENTS[mentIdx%MENTS.length]):ment())}</button>`}
       <div class="photo-age"><button class="pet-photo" data-act="photo" aria-label="${esc(pet.name)} 쓰다듬기">${ph}</button>
         ${opt.noAge?'':`<p class="age">${ageText(m)}</p>
-        <div class="sub muted"><button data-act="human">태어난 지 <b>${days.toLocaleString('ko-KR')}</b>일</button><span class="dot" aria-hidden="true">·</span><button data-act="human" aria-haspopup="dialog">사람 나이 약 <b>${Math.floor(humanAge(m))}</b>살</button></div>`}
+        <div class="sub muted"><button data-act="human">태어난 지 <b>${days.toLocaleString('ko-KR')}</b>일</button>${pet.kind==='etc'?'':`<span class="dot" aria-hidden="true">·</span><button data-act="human" aria-haspopup="dialog">사람 나이 약 <b>${Math.floor(humanAge(m))}</b>살</button>`}</div>`}
       </div></div></div>
     <div class="layer">${els.map(elHTML).join('')}</div>`;
 }
@@ -1097,16 +1098,18 @@ function openPet(first){
   pdraft={kind:'cat',size:'m',photo:null,...(pet||{})};
   $('pf-name').value=pdraft.name||'';$('pf-birth').value=pdraft.birth||'';$('pf-birth').max=ymd(today());
   $('pf-kind').value=pdraft.kind;$('pf-size').value=pdraft.size;$('pf-size-f').classList.toggle('hidden',pdraft.kind!=='dog');
+  $('pf-etc').value=pdraft.kindName||'';$('pf-etc-f').classList.toggle('hidden',pdraft.kind!=='etc');
   $('pf-photo').classList.toggle('hidden',!first);$('pf-photo').textContent=pdraft.photo?'사진 바꾸기 ✓':'사진 고르기';
   $('pet-x').classList.toggle('hidden',first&&!pets.length);$('dpet-t').textContent=first?'내 새끼를 소개해 주세요':'내 새끼 정보';
   openD('d-pet');
 }
-$('pf-kind').onchange=()=>$('pf-size-f').classList.toggle('hidden',$('pf-kind').value!=='dog');
+$('pf-kind').onchange=()=>{const k=$('pf-kind').value;$('pf-size-f').classList.toggle('hidden',k!=='dog');$('pf-etc-f').classList.toggle('hidden',k!=='etc');if(k==='etc')$('pf-etc').focus()};
 $('pet-form').onsubmit=async e=>{e.preventDefault();
   const name=$('pf-name').value.trim(),birth=$('pf-birth').value;
   if(!name||!birth){toast('이름과 생일을 입력해 주세요');return}
   if(birth>ymd(today())){toast('생일은 오늘 이전이어야 해요');return}
-  pet={...pdraft,name,birth,kind:$('pf-kind').value,size:$('pf-size').value};
+  const kind=$('pf-kind').value,kindName=$('pf-etc').value.trim();if(kind==='etc'&&!kindName){toast('어떤 아이인지 적어 주세요');$('pf-etc').focus();return}
+  pet={...pdraft,name,birth,kind,kindName:kind==='etc'?kindName:'',size:$('pf-size').value};
   const first=!(await store.get('pet'));await store.set('pet',pet);
   const pe=pets.find(x=>x.id===CUR);if(pe)pe.name=pet.name;else pets.push({id:CUR,name:pet.name});await store.set('pets',pets);closeD('d-pet');go(tab==='custom'?'home':tab);toast('저장했어요');if(first)setTimeout(()=>showInstall(true),1500);
 };
@@ -1250,9 +1253,10 @@ function renderPanes(){
   $('c-swatch').style.background=e&&e.color?e.color:'transparent';$('c-color').disabled=!e||e.type==='image';
   $('c-undo').disabled=!draft.hist.length;$('c-redo').disabled=!draft.redo.length;
   if(ctab==='text')fillText();
+  if(ctab==='draw')drUI();
 }
 /* ---------- 그리기: 펜·직선·네모·동그라미 → 그림 스티커로 붙이기 ---------- */
-const DR={tool:'pen',fill:false,color:null,w:6,strokes:[],cur:null,k:1},drCv=$('c-draw');
+const DR={tool:'pen',fill:false,color:null,w:6,redo:[],strokes:[],cur:null,k:1},drCv=$('c-draw');
 function drSize(){const r=stageEl.getBoundingClientRect();if(!r.width)return;DR.k=Math.min(2,devicePixelRatio||1);drCv.width=Math.round(r.width*DR.k);drCv.height=Math.round(r.height*DR.k);drPaint()}
 function drStroke(x,s){const p=s.pts,a=p[0],b=p[p.length-1];x.strokeStyle=s.color;x.lineWidth=s.w;x.lineCap='round';x.lineJoin='round';x.beginPath();
   if(s.tool==='pen'){x.moveTo(a.x,a.y);if(p.length<3)x.lineTo(b.x+.01,b.y);else{for(let i=1;i<p.length-1;i++)x.quadraticCurveTo(p[i].x,p[i].y,(p[i].x+p[i+1].x)/2,(p[i].y+p[i+1].y)/2);x.lineTo(b.x,b.y)}}
@@ -1266,17 +1270,18 @@ function drUI(){const cols=[draft.theme.ink,...COLORS.filter(c=>c!==draft.theme.
   $('drw-colors').innerHTML=cols.map(c=>`<button style="background:${c}" data-c="${c}" aria-label="색 ${c}" aria-pressed="${c===DR.color}"></button>`).join('');
   $('drw-tools').querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===DR.tool));$('drw-fill').setAttribute('aria-pressed',DR.fill);
   $('drw-w').value=DR.w;$('drw-w-v').textContent=DR.w;$('drw-w').style.setProperty('--p',((DR.w-2)/28*100)+'%');
-  $('drw-undo').disabled=!DR.strokes.length;$('drw-clear').disabled=!DR.strokes.length}
+  $('drw-undo').disabled=!DR.strokes.length;$('drw-clear').disabled=!DR.strokes.length;
+  $('c-undo').disabled=!draft.hist.length&&!DR.strokes.length;$('c-redo').disabled=!draft.redo.length&&!DR.redo.length}
 const drPt=e=>{const r=drCv.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}};
 drCv.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();if(DR.cur)return;try{drCv.setPointerCapture(e.pointerId)}catch(_){}DR.pid=e.pointerId;DR.cur={tool:DR.tool,fill:DR.fill,color:DR.color,w:DR.w,pts:[drPt(e)]};drPaint()});
 drCv.addEventListener('pointermove',e=>{if(!DR.cur||e.pointerId!==DR.pid)return;const p=drPt(e);if(DR.cur.tool==='pen')DR.cur.pts.push(p);else DR.cur.pts=[DR.cur.pts[0],p];drPaint()});
 function drEnd(e){if(!DR.cur||e.pointerId!==DR.pid)return;const s=DR.cur;DR.cur=null;const a=s.pts[0],b=s.pts[s.pts.length-1];
-  if(s.tool==='pen'||Math.hypot(b.x-a.x,b.y-a.y)>4)DR.strokes.push(s);drPaint();drUI()}
+  if(s.tool==='pen'||Math.hypot(b.x-a.x,b.y-a.y)>4){DR.strokes.push(s);DR.redo=[]}drPaint();drUI()}
 ['pointerup','pointercancel'].forEach(t=>drCv.addEventListener(t,drEnd));
 $('drw-tools').onclick=e=>{if(e.target.closest('#drw-fill')){DR.fill=!DR.fill;if(DR.fill&&DR.tool!=='rect'&&DR.tool!=='circle')DR.tool='rect';drUI();return}const b=e.target.closest('[data-tool]');if(!b)return;DR.tool=b.dataset.tool;drUI()};
 $('drw-colors').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;DR.color=b.dataset.c;drUI()};
 $('drw-w').oninput=()=>{DR.w=+$('drw-w').value;drUI()};
-$('drw-undo').onclick=()=>{DR.strokes.pop();drPaint();drUI()};
+$('drw-undo').onclick=()=>{if(DR.strokes.length)DR.redo.push(DR.strokes.pop());drPaint();drUI()};
 $('drw-clear').onclick=()=>{DR.strokes=[];drPaint();drUI()};
 function drCommit(){if(!DR.strokes.length)return false;let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
   for(const s of DR.strokes){const m=s.w/2+2;for(const p of s.pts){x0=Math.min(x0,p.x-m);y0=Math.min(y0,p.y-m);x1=Math.max(x1,p.x+m);y1=Math.max(y1,p.y+m)}}
@@ -1353,8 +1358,8 @@ $('c-rot').oninput=e=>{const el=selEl();if(!el)return;if(!sliding){pushHist();sl
 $('c-color').onclick=()=>{const el=selEl();if(!el||el.type==='image')return;openColor(el.color,c=>{pushHist();el.color=c;renderCustom()})};
 function restoreState(h){const s=JSON.parse(h);draft.theme=s.t;draft.els=s.e;if(s.m!==undefined)draft.ment=s.m;if(draft.sel>=draft.els.length)draft.sel=-1;renderCustom()}
 $('c-reset').onclick=()=>{pushHist();draft.theme=clone(DEFAULT_THEME);draft.els=[];draft.ment='';draft.sel=-1;textDraft=null;renderCustom();toast('처음 모습으로 돌렸어요 · 되돌리기로 취소할 수 있어요')};
-$('c-undo').onclick=()=>{const h=draft.hist.pop();if(!h)return;draft.redo.push(snapState());restoreState(h)};
-$('c-redo').onclick=()=>{const h=draft.redo.pop();if(!h)return;draft.hist.push(snapState());restoreState(h)};
+$('c-undo').onclick=()=>{if(ctab==='draw'&&DR.strokes.length){DR.redo.push(DR.strokes.pop());drPaint();drUI();return}const h=draft.hist.pop();if(!h)return;draft.redo.push(snapState());restoreState(h)};
+$('c-redo').onclick=()=>{if(ctab==='draw'&&DR.redo.length){DR.strokes.push(DR.redo.pop());drPaint();drUI();return}const h=draft.redo.pop();if(!h)return;draft.hist.push(snapState());restoreState(h)};
 document.addEventListener('keydown',e=>{if(tab==='custom'&&(e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==='z'||e.key.toLowerCase()==='y')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.querySelector('.dim.on')){e.preventDefault();$((e.key.toLowerCase()==='y'||e.shiftKey)?'c-redo':'c-undo').click()}});
 $('c-front').onclick=()=>{const i=draft.sel;if(i<0||i===draft.els.length-1)return;pushHist();const [e]=draft.els.splice(i,1);draft.els.push(e);draft.sel=draft.els.length-1;renderCustom()};
 $('c-back').onclick=()=>{const i=draft.sel;if(i<=0)return;pushHist();const [e]=draft.els.splice(i,1);draft.els.unshift(e);draft.sel=0;renderCustom()};
@@ -1426,7 +1431,7 @@ $('dc-apply').onclick=()=>{closeD('d-color');colorCb&&colorCb(hsv2hex(hsv))};
 $('set-privacy').onclick=()=>openPrivacy();
 document.querySelector('.set-list').onclick=e=>{const b=e.target.closest('[data-set]');if(!b)return;const k=b.dataset.set;
   if(k==='pet')openPet(false);else if(k==='photo')changePhoto();else if(k==='custom')openCustom();
-  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='petmgr'){$('dpm-switch').classList.toggle('hidden',pets.length<2);$('dpm-del').classList.toggle('hidden',pets.length<2);openD('d-petmgr')}else if(k==='pro')openPro();else if(k==='widget'){if(needPro('홈 화면 위젯'))openD('d-widget')}else if(k==='albummgr'){$('dam-nopet').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;openD('d-albummgr')}};
+  else if(k==='wall')openWall();else if(k==='install')showInstall(true);else if(k==='demo')enterDemo();else if(k==='privacy')openPrivacy();else if(k==='backup'){$('db-note').classList.add('hidden');openD('d-backup')}else if(k==='request'){$('rq-text').value='';openD('d-request')}else if(k==='petmgr'){$('dpm-switch').classList.toggle('hidden',pets.length<2);$('dpm-del').classList.toggle('hidden',pets.length<2);openD('d-petmgr')}else if(k==='pro')openPro();else if(k==='widget'){if(needPro('홈 화면 위젯'))openD('d-widget')}else if(k==='albummgr'){$('dam-nopet').classList.toggle('hidden',pet.kind==='etc');$('dam-nopet').textContent=`${pet.kind==='dog'?'강아지':'고양이'} 없는 사진 고르기`;openD('d-albummgr')}};
 $('dpm-switch').onclick=()=>{closeD('d-petmgr');openPets()};$('dpm-add').onclick=()=>{closeD('d-petmgr');addPet()};
 $('dpm-del').onclick=()=>{closeD('d-petmgr');$('ddp-body').textContent=`${pet.name}의 정보, 사진 ${photos.length.toLocaleString('ko-KR')}장, 홈 꾸미기가 모두 지워져요. 되돌릴 수 없어요.`;openD('d-delpet')};
 $('dpm-info').onclick=()=>{closeD('d-petmgr');openPet(false)};$('dpm-photo').onclick=()=>{closeD('d-petmgr');changePhoto()};
@@ -1492,7 +1497,7 @@ async function renderWallpaper(outW){
   const m=box.querySelector('.ment');if(m){const r=R(m);x.fillStyle=theme.ink;x.fillRect(r.x+3,r.y+3,r.w,r.h);x.fillStyle=theme.bubble;x.fillRect(r.x,r.y,r.w,r.h);x.strokeStyle=theme.ink;x.lineWidth=2;x.strokeRect(r.x+1,r.y+1,r.w-2,r.h-2);txt(m)}
   const pimg=box.querySelector('.pet-photo img'),pr=R(box.querySelector('.pet-photo'));
   if(pimg){const im=await loadImg(pimg.src),k=Math.min(pr.w/im.width,pr.h/im.height);x.drawImage(im,pr.x+(pr.w-im.width*k)/2,pr.y+(pr.h-im.height*k)/2,im.width*k,im.height*k)}
-  else{x.save();x.translate(pr.x+18,pr.y+18);x.scale(64/20,64/20);x.fillStyle=theme.ink;x.fill(new Path2D(P[pet.kind==='dog'?'dogFace':'catFace'][0]),'evenodd');x.restore()}
+  else{x.save();x.translate(pr.x+18,pr.y+18);x.scale(64/20,64/20);x.fillStyle=theme.ink;x.fill(new Path2D(pet.kind==='etc'?STK.paw.d:P[pet.kind==='dog'?'dogFace':'catFace'][0]),'evenodd');x.restore()}
   const L=R(box.querySelector('.layer'));
   for(const e of elements){x.save();x.translate(L.x+e.x,L.y+e.y);x.rotate((e.rot||0)*Math.PI/180);x.scale(e.scale||1,e.scale||1);
     if(e.type==='sticker'){x.translate(-20,-20);x.scale(2,2);x.fillStyle=e.color;x.fill(new Path2D(STK[e.key].d),'evenodd')}
