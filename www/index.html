@@ -621,10 +621,6 @@ body:has(.dim.on) .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top))}
   <div class="dialog">
     <div class="dhead"><h2 id="dw-t">내 새끼 배경화면</h2><button class="iconbtn" data-close aria-label="닫기" data-icon="close"></button></div>
     <div class="row2">
-      <div class="field"><label for="w-kind">화면</label><select class="input" id="w-kind"><option value="lock">잠금화면용</option><option value="home">홈화면용</option></select></div>
-      <div class="field"><label for="w-ratio">비율</label><select class="input" id="w-ratio"><option value="auto">내 폰 화면</option><option value="2.2222">20:9</option><option value="2.1667">19.5:9</option><option value="1.7778">16:9</option></select></div>
-    </div>
-    <div class="row2">
       <label class="check"><input type="checkbox" id="w-age" checked>나이 표시</label>
       <label class="check"><input type="checkbox" id="w-ment" checked>주접 표시</label>
     </div>
@@ -1210,7 +1206,7 @@ $('req-form').onsubmit=async e=>{e.preventDefault();const txt=$('rq-text').value
 /* S05 배경화면 */
 // 홈 화면과 같은 폭(W0)으로 그려서 요소 위치·크기 비율이 폰에서 보던 그대로 저장돼요
 const wallW=()=>Math.round(Math.min(430,$('app').clientWidth||innerWidth||390));
-function wallRatio(){const v=$('w-ratio').value;if(v!=='auto')return +v;const w=screen.width||innerWidth,h=screen.height||innerHeight;const r=Math.max(w,h)/Math.min(w,h);return r>1.3&&r<3?r:2.1667}
+function wallRatio(){const w=screen.width||innerWidth,h=screen.height||innerHeight;const r=Math.max(w,h)/Math.min(w,h);return r>1.3&&r<3?r:2.1667}
 async function renderWallpaper(outW){
   const W0=wallW(),ratio=wallRatio(),H0=Math.round(W0*ratio),scale=outW/W0,W=Math.round(outW),H=Math.round(H0*scale);
   const box=document.createElement('div');box.style.cssText=`position:fixed;left:-9999px;top:0;width:${W0}px;height:${H0}px`;
@@ -1247,10 +1243,10 @@ function showShift(){const v=wallShift();$('w-shift-v').textContent=v===0?'홈 �
 try{const v=parseInt(localStorage.getItem('wallShift'));if(v>=-20&&v<=20)$('w-shift').value=v}catch(_){}showShift();
 let shiftT;$('w-shift').addEventListener('input',()=>{showShift();try{localStorage.setItem('wallShift',wallShift())}catch(_){}clearTimeout(shiftT);shiftT=setTimeout(updateWallPreview,120)});
 function openWall(){$('w-tip').textContent='저장이 안 되면 위 이미지를 길게 눌러 사진에 저장해 주세요.';$('w-tip').classList.add('hidden');openD('d-wall');updateWallPreview()}
-['w-kind','w-ratio','w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
+['w-age','w-ment'].forEach(id=>$(id).addEventListener('change',updateWallPreview));
 $('w-save').onclick=async()=>{const btn=$('w-save');btn.disabled=true;btn.textContent='저장하는 중…';
   try{const c=await renderWallpaper(1080),url=c.toDataURL('image/png');$('w-img').src=url;
-    const name=`naesaekki-${$('w-kind').value==='lock'?'lock':'home'}-${Date.now()}.png`;
+    const name=`naesaekki-${Date.now()}.png`;
     // 앱(Android 10+)에서는 공유 창 없이 사진 앱의 '내새끼' 앨범에 바로 저장
     const NS=plug('Naesaekki');
     if(NS){try{await NS.saveImage({data:url.split(',')[1],name,mime:'image/png'});toast('사진 앱의 ‘내새끼’ 앨범에 저장했어요');return}catch(e){console.warn(e)}}
